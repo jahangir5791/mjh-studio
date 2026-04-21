@@ -13,12 +13,87 @@
         :root { --bg: #f4f7fc; --surface: #ffffff; --card: #ffffff; --text: #0a2540; --text-sec: #2c5a7a; --border: #dce5ef; --accent: #1f6e8c; --soft: #e0f0f5; }
         body.dark { --bg: #121826; --surface: #1e293b; --card: #1e2a3a; --text: #eef2ff; --text-sec: #b9c8e6; --border: #2d3a4b; --accent: #3b9bcb; --soft: #1f3e4c; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; }
-        #splash { position: fixed; top:0; left:0; width:100%; height:100%; background: linear-gradient(135deg, #0f172a, #1e293b); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; transition: opacity 0.6s; text-align: center; }
-        .splash-logo { background: linear-gradient(135deg, #1e6f5c, #289672); width: 120px; height: 120px; border-radius: 36px; display: flex; align-items: center; justify-content: center; font-size: 64px; color: white; box-shadow: 0 20px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }
-        .splash-title { font-size: 34px; font-weight: bold; background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 1px; }
-        .splash-sub { margin-top: 12px; color: #94a3b8; font-size: 16px; }
-        .spinner { margin-top: 30px; width: 34px; height: 34px; border: 3px solid rgba(255,255,255,0.2); border-top: 3px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* 3D Splash Screen */
+        #splash {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.6s;
+            text-align: center;
+        }
+        .scene {
+            width: 160px;
+            height: 160px;
+            perspective: 600px;
+            margin-bottom: 30px;
+        }
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: spin 8s infinite linear;
+        }
+        .cube__face {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, #1e6f5c, #289672);
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 8px rgba(0,0,0,0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .cube__face--front  { transform: rotateY(0deg) translateZ(80px); }
+        .cube__face--back   { transform: rotateY(180deg) translateZ(80px); }
+        .cube__face--right  { transform: rotateY(90deg) translateZ(80px); }
+        .cube__face--left   { transform: rotateY(-90deg) translateZ(80px); }
+        .cube__face--top    { transform: rotateX(90deg) translateZ(80px); }
+        .cube__face--bottom { transform: rotateX(-90deg) translateZ(80px); }
+        
+        @keyframes spin {
+            from { transform: rotateX(0) rotateY(0); }
+            to { transform: rotateX(360deg) rotateY(360deg); }
+        }
+        .splash-title {
+            font-size: 34px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+            margin-top: 20px;
+        }
+        .splash-sub {
+            margin-top: 12px;
+            color: #94a3b8;
+            font-size: 16px;
+        }
+        .spinner {
+            margin-top: 30px;
+            width: 34px;
+            height: 34px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            animation: spinCircle 1s linear infinite;
+        }
+        @keyframes spinCircle { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .main-app { display: none; height: 100vh; flex-direction: column; }
         .app-header { background: var(--surface); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
         .logo-studio { background: linear-gradient(135deg, #1e6f5c, #289672); padding: 6px 14px; border-radius: 40px; font-weight: 800; font-size: 22px; color: white; }
@@ -40,13 +115,26 @@
         .card-item, .tutorial-step { background: var(--card); padding: 14px; border-radius: 24px; margin: 12px 0; border: 1px solid var(--border); }
         .diagram { background: var(--soft); padding: 16px; border-radius: 20px; font-family: monospace; white-space: pre; overflow-x: auto; margin: 12px 0; }
         .settings-group { background: var(--card); border-radius: 28px; padding: 18px; margin: 20px 0; }
+        .guide-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 20px; overflow: hidden; }
+        .guide-table th, .guide-table td { border: 1px solid var(--border); padding: 10px; text-align: left; vertical-align: top; }
+        .guide-table th { background: var(--accent); color: white; }
         footer { text-align: center; font-size: 10px; padding: 8px; color: var(--text-sec); }
         h2 { font-size: 1.6rem; }
+        @media (max-width: 600px) { .guide-table th, .guide-table td { padding: 6px; font-size: 11px; } .cube__face { width: 120px; height: 120px; font-size: 24px; } .cube__face--front, .cube__face--back, .cube__face--right, .cube__face--left, .cube__face--top, .cube__face--bottom { transform: translateZ(60px); } .scene { width: 120px; height: 120px; } }
     </style>
 </head>
 <body>
 <div id="splash">
-    <div class="splash-logo">🎵</div>
+    <div class="scene">
+        <div class="cube">
+            <div class="cube__face cube__face--front">MJH</div>
+            <div class="cube__face cube__face--back">MJH</div>
+            <div class="cube__face cube__face--right">STUDIO</div>
+            <div class="cube__face cube__face--left">STUDIO</div>
+            <div class="cube__face cube__face--top">3D</div>
+            <div class="cube__face cube__face--bottom">APP</div>
+        </div>
+    </div>
     <div class="splash-title">MJH STUDIO</div>
     <div class="splash-sub">Create • Code • Extend</div>
     <div class="spinner"></div>
@@ -60,7 +148,7 @@
     </div>
 
     <div class="pages-container">
-        <!-- LEARNING CENTER -->
+        <!-- LEARNING CENTER with GUIDE TABLE -->
         <div class="page" data-page="learn" id="pageLearn">
             <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2><i class="fas fa-graduation-cap"></i> Learning Center</h2>
@@ -72,6 +160,30 @@
                 <button class="primary" id="learnVideoBtn">🎥 Video Edit</button>
             </div>
             <div id="tutorialContent" class="settings-group"><p>Select a topic above to start learning step by step.</p></div>
+            
+            <div class="settings-group">
+                <h3><i class="fas fa-question-circle"></i> Quick User Guide (সহায়িকা)</h3>
+                <div style="overflow-x: auto;">
+                    <table class="guide-table">
+                        <thead><tr><th>Feature (বৈশিষ্ট্য)</th><th>What it does (কী করে)</th><th>How to use (কীভাবে ব্যবহার করবেন)</th></tr></thead>
+                        <tbody>
+                            <tr><td>🎓 Learn</td><td>Tutorials + Practice Zone</td><td>Click topic → read steps → try code → run</td></tr>
+                            <tr><td>✏️ Editor</td><td>HTML/CSS/JS code + live preview</td><td>Write code → Click Run Preview → see output</td></tr>
+                            <tr><td>🧩 Blockly</td><td>Visual block programming</td><td>Drag blocks → Generate Code → copy to editor</td></tr>
+                            <tr><td>🔌 Extensions</td><td>Create custom plugins (JSON)</td><td>New Extension → name + JSON → Save → Load</td></tr>
+                            <tr><td>🎥 Video</td><td>Upload & download videos</td><td>Choose file → preview → download</td></tr>
+                            <tr><td>📁 Projects</td><td>Save/Load projects, backup</td><td>Save project → Load later → Export/Import JSON</td></tr>
+                            <tr><td>🌙 Dark Mode</td><td>Switch light/dark theme</td><td>Click Dark button in header</td></tr>
+                            <tr><td>🔗 Share</td><td>Share app link</td><td>Click Share icon in header</td></tr>
+                            <tr><td>🗑️ Trash</td><td>Delete all projects & extensions</td><td>Click Trash icon → confirm</td></tr>
+                            <tr><td>🌐 Translate</td><td>Translate UI to any language</td><td>Click Translate button → select language</td></tr>
+                            <tr><td>💾 Backup</td><td>Export/Import all data</td><td>Projects tab → Export Backup / Import Backup</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top:12px; font-size:12px;">📌 For detailed step-by-step tutorials, click any topic button above.</p>
+            </div>
+
             <div id="livePracticeArea" style="margin-top:20px;">
                 <h3>✏️ Practice Zone (Try yourself)</h3>
                 <textarea id="practiceCode" rows="6" placeholder="Write HTML or code here..."></textarea>
@@ -80,7 +192,6 @@
             </div>
         </div>
 
-        <!-- HTML EDITOR -->
         <div class="page" data-page="editor" id="pageEditor">
             <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2>✏️ HTML Studio</h2>
@@ -90,7 +201,6 @@
             <iframe id="previewFrame"></iframe>
         </div>
 
-        <!-- BLOCKLY -->
         <div class="page" data-page="blockly" id="pageBlockly">
             <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2>🧩 Blockly</h2>
@@ -99,7 +209,6 @@
             <textarea id="generatedCode" rows="6"></textarea>
         </div>
 
-        <!-- EXTENSIONS -->
         <div class="page" data-page="extensions" id="pageExtensions">
             <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2>Extensions Lab</h2>
@@ -108,7 +217,6 @@
             <div id="extensionEditor" style="display:none;"><input type="text" id="extName" placeholder="Name"><textarea id="extCode" rows="6"></textarea><button id="saveExtensionBtn">Save</button><button id="cancelExtBtn">Cancel</button></div>
         </div>
 
-        <!-- VIDEO STUDIO -->
         <div class="page" data-page="video" id="pageVideo">
             <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2>Video Studio</h2>
@@ -116,7 +224,6 @@
             <div class="settings-group"><input type="file" id="videoUpload" accept="video/*"><video id="videoPreview" controls style="margin-top:12px;"></video><button id="downloadVideoBtn">Download</button></div>
         </div>
 
-        <!-- PROJECTS & SETTINGS -->
         <div class="page" data-page="projects" id="pageProjects">
             <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2>My Projects</h2>
@@ -124,7 +231,6 @@
             <div class="settings-group"><button id="resetPasswordBtn">Password Reset (Demo)</button><button id="exportBackupBtn">Export Backup</button><button id="importBackupBtn">Import Backup</button></div>
         </div>
 
-        <!-- LOGIN -->
         <div class="page" data-page="login" id="pageLogin"><div style="max-width:400px; margin:auto; padding-top:15%;"><div class="settings-group"><div id="loginForm"><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Password"><button id="doLoginBtn" class="primary">Login</button><p>No account? <button id="showSignupBtn" style="background:none;">Sign Up</button></p></div><div id="signupForm" style="display:none;"><input type="text" id="signupName" placeholder="Name"><input type="email" id="signupEmail" placeholder="Email"><input type="password" id="signupPassword" placeholder="Password"><button id="doSignupBtn" class="primary">Sign Up</button><p>Already? <button id="showLoginBtn" style="background:none;">Login</button></p></div></div></div></div>
     </div>
 
@@ -140,7 +246,6 @@
 </div>
 
 <script>
-    // Splash
     setTimeout(() => { document.getElementById('splash').style.opacity='0'; setTimeout(()=>{ document.getElementById('splash').style.display='none'; document.getElementById('mainApp').style.display='flex'; checkLogin(); },600); },3000);
 
     let currentUser=null, projects={}, extensions={}, currentHtmlCode='<!DOCTYPE html><html><head><title>MJH</title></head><body><h1>Hello MJH Studio</h1></body></html>';
@@ -186,7 +291,6 @@
     window.navigateTo=navigateTo;
     document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>navigateTo(b.dataset.nav));
 
-    // Learning Center Tutorials
     const tutorialDiv=document.getElementById('tutorialContent');
     function showTutorial(title, steps, diagram, finalCode){
         let html=`<h3>${title}</h3><div class="diagram">${diagram}</div>`;
