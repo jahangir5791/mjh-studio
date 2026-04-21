@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>MJH Studio</title>
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/blockly/blocks.js"></script>
+    <script src="https://unpkg.com/blockly/javascript.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: background 0.2s, color 0.2s; }
+        :root { --bg: #f4f7fc; --surface: #ffffff; --card: #ffffff; --text: #0a2540; --text-sec: #2c5a7a; --border: #dce5ef; --accent: #1f6e8c; --soft: #e0f0f5; }
+        body.dark { --bg: #121826; --surface: #1e293b; --card: #1e2a3a; --text: #eef2ff; --text-sec: #b9c8e6; --border: #2d3a4b; --accent: #3b9bcb; --soft: #1f3e4c; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; }
+        #splash { position: fixed; top:0; left:0; width:100%; height:100%; background: linear-gradient(135deg, #0f172a, #1e293b); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; transition: opacity 0.6s; text-align: center; }
+        .splash-logo { background: linear-gradient(135deg, #1e6f5c, #289672); width: 120px; height: 120px; border-radius: 36px; display: flex; align-items: center; justify-content: center; font-size: 64px; color: white; box-shadow: 0 20px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        .splash-title { font-size: 34px; font-weight: bold; background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 1px; }
+        .splash-sub { margin-top: 12px; color: #94a3b8; font-size: 16px; }
+        .spinner { margin-top: 30px; width: 34px; height: 34px; border: 3px solid rgba(255,255,255,0.2); border-top: 3px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .main-app { display: none; height: 100vh; flex-direction: column; }
+        .app-header { background: var(--surface); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .logo-studio { background: linear-gradient(135deg, #1e6f5c, #289672); padding: 6px 14px; border-radius: 40px; font-weight: 800; font-size: 22px; color: white; }
+        .action-icons { display: flex; gap: 18px; color: var(--text-sec); }
+        .action-icons i { font-size: 1.3rem; cursor: pointer; }
+        .dark-toggle, .translate-btn { background: var(--soft); border: none; padding: 6px 12px; border-radius: 40px; cursor: pointer; margin-left: 8px; }
+        .pages-container { flex: 1; position: relative; overflow: hidden; }
+        .page { position: absolute; top:0; left:0; width:100%; height:100%; overflow-y: auto; padding: 18px; opacity: 0; visibility: hidden; transition: opacity 0.3s; }
+        .page.active { opacity: 1; visibility: visible; }
+        .bottom-nav { display: flex; background: var(--surface); border-top: 1px solid var(--border); padding: 8px 0 12px; justify-content: space-around; }
+        .nav-btn { background: none; border: none; padding: 6px; font-size: 12px; color: var(--text-sec); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-btn.active { color: var(--accent); font-weight: bold; }
+        .back-btn { background: var(--soft); border: none; padding: 8px 16px; border-radius: 40px; margin-bottom: 18px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+        .toolbar { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+        button { background: var(--soft); border: none; padding: 8px 18px; border-radius: 40px; cursor: pointer; }
+        button.primary { background: var(--accent); color: white; }
+        textarea, input { width: 100%; border-radius: 20px; border: 1px solid var(--border); background: var(--card); padding: 12px; font-family: monospace; }
+        iframe, video { width: 100%; border-radius: 24px; border: 1px solid var(--border); background: white; }
+        .card-item, .tutorial-step { background: var(--card); padding: 14px; border-radius: 24px; margin: 12px 0; border: 1px solid var(--border); }
+        .diagram { background: var(--soft); padding: 16px; border-radius: 20px; font-family: monospace; white-space: pre; overflow-x: auto; margin: 12px 0; }
+        .settings-group { background: var(--card); border-radius: 28px; padding: 18px; margin: 20px 0; }
+        footer { text-align: center; font-size: 10px; padding: 8px; color: var(--text-sec); }
+        h2 { font-size: 1.6rem; }
+    </style>
+</head>
+<body>
+<div id="splash">
+    <div class="splash-logo">🎵</div>
+    <div class="splash-title">MJH STUDIO</div>
+    <div class="splash-sub">Create • Code • Extend</div>
+    <div class="spinner"></div>
+</div>
+
+<div class="main-app" id="mainApp">
+    <div class="app-header">
+        <div class="logo-studio">MJH</div>
+        <div class="action-icons"><i class="fas fa-share-alt" id="globalShareBtn"></i><i class="fas fa-magic" id="autoBtn"></i><i class="fas fa-edit" id="globalEditBtn"></i><i class="fas fa-trash-alt" id="globalTrashBtn"></i></div>
+        <div><button class="translate-btn" id="translateBtn"><i class="fas fa-language"></i> Translate</button><button class="dark-toggle" id="darkModeToggle"><i class="fas fa-moon"></i> Dark</button></div>
+    </div>
+
+    <div class="pages-container">
+        <!-- LEARNING CENTER -->
+        <div class="page" data-page="learn" id="pageLearn">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2><i class="fas fa-graduation-cap"></i> Learning Center</h2>
+            <p>Choose a topic. Follow steps, see diagrams, try live editor, then build your own.</p>
+            <div class="toolbar">
+                <button class="primary" id="learnHtmlBtn">📝 HTML Basics</button>
+                <button class="primary" id="learnBlocklyBtn">🧩 Blockly</button>
+                <button class="primary" id="learnExtBtn">🔌 Extensions</button>
+                <button class="primary" id="learnVideoBtn">🎥 Video Edit</button>
+            </div>
+            <div id="tutorialContent" class="settings-group"><p>Select a topic above to start learning step by step.</p></div>
+            <div id="livePracticeArea" style="margin-top:20px;">
+                <h3>✏️ Practice Zone (Try yourself)</h3>
+                <textarea id="practiceCode" rows="6" placeholder="Write HTML or code here..."></textarea>
+                <button id="runPracticeBtn" class="primary">Run & See Result</button>
+                <iframe id="practicePreview" style="height:200px; margin-top:10px;" srcdoc="<h3>Result will appear here</h3>"></iframe>
+            </div>
+        </div>
+
+        <!-- HTML EDITOR -->
+        <div class="page" data-page="editor" id="pageEditor">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2>✏️ HTML Studio</h2>
+            <div class="toolbar"><button id="runPreviewBtn" class="primary">Run Preview</button><button id="saveHtmlProjectBtn">Save Project</button></div>
+            <textarea id="htmlCode" rows="10"></textarea>
+            <h3>Preview</h3>
+            <iframe id="previewFrame"></iframe>
+        </div>
+
+        <!-- BLOCKLY -->
+        <div class="page" data-page="blockly" id="pageBlockly">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2>🧩 Blockly</h2>
+            <div id="blocklyDiv" style="height: 380px; background: var(--card); border-radius: 24px; margin: 12px 0;"></div>
+            <div class="toolbar"><button id="genCodeBtn" class="primary">Generate Code</button><button id="saveBlocklyProjectBtn">Save Blockly</button></div>
+            <textarea id="generatedCode" rows="6"></textarea>
+        </div>
+
+        <!-- EXTENSIONS -->
+        <div class="page" data-page="extensions" id="pageExtensions">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2>Extensions Lab</h2>
+            <div class="toolbar"><button id="newExtensionBtn" class="primary">New Extension</button><button id="loadExtensionBtn">Load Demo</button></div>
+            <div id="extensionList"></div>
+            <div id="extensionEditor" style="display:none;"><input type="text" id="extName" placeholder="Name"><textarea id="extCode" rows="6"></textarea><button id="saveExtensionBtn">Save</button><button id="cancelExtBtn">Cancel</button></div>
+        </div>
+
+        <!-- VIDEO STUDIO -->
+        <div class="page" data-page="video" id="pageVideo">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2>Video Studio</h2>
+            <div class="settings-group"><h3>Tutorials</h3><iframe width="100%" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe></div>
+            <div class="settings-group"><input type="file" id="videoUpload" accept="video/*"><video id="videoPreview" controls style="margin-top:12px;"></video><button id="downloadVideoBtn">Download</button></div>
+        </div>
+
+        <!-- PROJECTS & SETTINGS -->
+        <div class="page" data-page="projects" id="pageProjects">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2>My Projects</h2>
+            <div id="projectList"></div>
+            <div class="settings-group"><button id="resetPasswordBtn">Password Reset (Demo)</button><button id="exportBackupBtn">Export Backup</button><button id="importBackupBtn">Import Backup</button></div>
+        </div>
+
+        <!-- LOGIN -->
+        <div class="page" data-page="login" id="pageLogin"><div style="max-width:400px; margin:auto; padding-top:15%;"><div class="settings-group"><div id="loginForm"><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Password"><button id="doLoginBtn" class="primary">Login</button><p>No account? <button id="showSignupBtn" style="background:none;">Sign Up</button></p></div><div id="signupForm" style="display:none;"><input type="text" id="signupName" placeholder="Name"><input type="email" id="signupEmail" placeholder="Email"><input type="password" id="signupPassword" placeholder="Password"><button id="doSignupBtn" class="primary">Sign Up</button><p>Already? <button id="showLoginBtn" style="background:none;">Login</button></p></div></div></div></div>
+    </div>
+
+    <div class="bottom-nav" id="bottomNav" style="display:none;">
+        <button class="nav-btn" data-nav="learn"><i class="fas fa-graduation-cap"></i> Learn</button>
+        <button class="nav-btn" data-nav="editor"><i class="fas fa-code"></i> Editor</button>
+        <button class="nav-btn" data-nav="blockly"><i class="fas fa-puzzle-piece"></i> Blockly</button>
+        <button class="nav-btn" data-nav="extensions"><i class="fas fa-plug"></i> Extensions</button>
+        <button class="nav-btn" data-nav="video"><i class="fas fa-video"></i> Video</button>
+        <button class="nav-btn" data-nav="projects"><i class="fas fa-folder"></i> Projects</button>
+    </div>
+    <footer>MJH Studio • Learn • Practice • Create</footer>
+</div>
+
+<script>
+    // Splash
+    setTimeout(() => { document.getElementById('splash').style.opacity='0'; setTimeout(()=>{ document.getElementById('splash').style.display='none'; document.getElementById('mainApp').style.display='flex'; checkLogin(); },600); },3000);
+
+    let currentUser=null, projects={}, extensions={}, currentHtmlCode='<!DOCTYPE html><html><head><title>MJH</title></head><body><h1>Hello MJH Studio</h1></body></html>';
+    let blocklyWorkspace=null;
+    function saveAllData(){ if(currentUser) localStorage.setItem(`mjhs_${currentUser}_data`,JSON.stringify({projects,extensions,currentHtmlCode})); }
+    function loadAllData(){ if(currentUser){ let d=JSON.parse(localStorage.getItem(`mjhs_${currentUser}_data`)||'{}'); projects=d.projects||{}; extensions=d.extensions||{}; currentHtmlCode=d.currentHtmlCode||currentHtmlCode; document.getElementById('htmlCode').value=currentHtmlCode; refreshPreview(); renderProjects(); renderExtensions(); } }
+    function refreshPreview(){ let code=document.getElementById('htmlCode').value; document.getElementById('previewFrame').srcdoc=code; currentHtmlCode=code; saveAllData(); }
+    function saveHtmlProject(){ let n=prompt('Project name:'); if(n){ projects[n]={type:'html',content:currentHtmlCode}; saveAllData(); renderProjects(); } }
+    function initBlockly(){ if(blocklyWorkspace) blocklyWorkspace.dispose(); blocklyWorkspace=Blockly.inject('blocklyDiv',{toolbox:`<xml><block type="controls_if"></block><block type="text_print"></block><block type="text"></block></xml>`,grid:{spacing:20}}); }
+    function genBlocklyCode(){ if(blocklyWorkspace){ let code=Blockly.JavaScript.workspaceToCode(blocklyWorkspace); document.getElementById('generatedCode').value=code; alert('Code generated!'); } }
+    function saveBlocklyProj(){ if(blocklyWorkspace){ let xml=Blockly.Xml.workspaceToDom(blocklyWorkspace); let xmlText=Blockly.Xml.domToText(xml); let n=prompt('Blockly project name:'); if(n){ projects[n]={type:'blockly',content:xmlText}; saveAllData(); renderProjects(); } } }
+    function renderProjects(){ let c=document.getElementById('projectList'); if(!c) return; let h=''; for(let n in projects){ h+=`<div class="card-item"><span>${n}</span><div><button class="loadProj" data-name="${n}">Load</button><button class="delProj" data-name="${n}">Del</button></div></div>`; } c.innerHTML=h||'<p>No projects</p>'; document.querySelectorAll('.loadProj').forEach(b=>b.onclick=()=>{ let p=projects[b.dataset.name]; if(p.type==='html'){ currentHtmlCode=p.content; document.getElementById('htmlCode').value=currentHtmlCode; refreshPreview(); navigateTo('editor'); }else if(p.type==='blockly'&&blocklyWorkspace){ Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(p.content),blocklyWorkspace); navigateTo('blockly'); } alert(`Loaded ${b.dataset.name}`); }); document.querySelectorAll('.delProj').forEach(b=>b.onclick=()=>{ delete projects[b.dataset.name]; saveAllData(); renderProjects(); }); }
+    function renderExtensions(){ let c=document.getElementById('extensionList'); if(!c) return; let h=''; for(let n in extensions){ h+=`<div class="card-item"><span>${n}</span><div><button class="loadExt" data-name="${n}">Load</button><button class="delExt" data-name="${n}">Delete</button></div></div>`; } c.innerHTML=h||'<p>No extensions</p>'; document.querySelectorAll('.loadExt').forEach(b=>b.onclick=()=>{ let ext=extensions[b.dataset.name]; try{ let p=JSON.parse(ext.content); console.log(p); alert(`Extension ${b.dataset.name} loaded (check console)`); if(p.script) eval(p.script); }catch(e){ alert('Invalid JSON'); } }); document.querySelectorAll('.delExt').forEach(b=>b.onclick=()=>{ delete extensions[b.dataset.name]; saveAllData(); renderExtensions(); }); }
+    document.getElementById('newExtensionBtn')?.addEventListener('click',()=>{ document.getElementById('extensionEditor').style.display='block'; document.getElementById('extName').value=''; document.getElementById('extCode').value='{"name":"demo","script":"alert(\"Hello\")"}'; });
+    document.getElementById('saveExtensionBtn')?.addEventListener('click',()=>{ let n=document.getElementById('extName').value.trim(); let c=document.getElementById('extCode').value; if(n){ extensions[n]={content:c}; saveAllData(); renderExtensions(); document.getElementById('extensionEditor').style.display='none'; } });
+    document.getElementById('cancelExtBtn')?.addEventListener('click',()=>{ document.getElementById('extensionEditor').style.display='none'; });
+    document.getElementById('loadExtensionBtn')?.addEventListener('click',()=>{ extensions['Sample']={content:'{"name":"Sample","script":"alert(\"Sample loaded\")"}'}; saveAllData(); renderExtensions(); alert('Demo extension added'); });
+    let uploadedBlob=null;
+    document.getElementById('videoUpload')?.addEventListener('change',e=>{ let f=e.target.files[0]; if(f){ uploadedBlob=f; document.getElementById('videoPreview').src=URL.createObjectURL(f); } });
+    document.getElementById('downloadVideoBtn')?.addEventListener('click',()=>{ if(uploadedBlob){ let a=document.createElement('a'); a.href=URL.createObjectURL(uploadedBlob); a.download='mjh_video.mp4'; a.click(); }else alert('Upload video first'); });
+    function checkLogin(){ let u=localStorage.getItem('mjhs_user'); if(u){ currentUser=u; loadAllData(); document.getElementById('bottomNav').style.display='flex'; navigateTo('learn'); initBlockly(); }else{ document.getElementById('bottomNav').style.display='none'; navigateTo('login'); } }
+    function login(e,p){ if(e&&p){ localStorage.setItem('mjhs_user',e); currentUser=e; loadAllData(); document.getElementById('bottomNav').style.display='flex'; navigateTo('learn'); initBlockly(); }else alert('Enter email/password'); }
+    function signup(n,e,p){ if(n&&e&&p){ localStorage.setItem('mjhs_user',e); currentUser=e; loadAllData(); document.getElementById('bottomNav').style.display='flex'; navigateTo('learn'); initBlockly(); }else alert('Fill all'); }
+    document.getElementById('doLoginBtn')?.addEventListener('click',()=>login(document.getElementById('loginEmail').value,document.getElementById('loginPassword').value));
+    document.getElementById('doSignupBtn')?.addEventListener('click',()=>signup(document.getElementById('signupName').value,document.getElementById('signupEmail').value,document.getElementById('signupPassword').value));
+    document.getElementById('showSignupBtn')?.addEventListener('click',()=>{ document.getElementById('loginForm').style.display='none'; document.getElementById('signupForm').style.display='block'; });
+    document.getElementById('showLoginBtn')?.addEventListener('click',()=>{ document.getElementById('signupForm').style.display='none'; document.getElementById('loginForm').style.display='block'; });
+    document.getElementById('resetPasswordBtn')?.addEventListener('click',()=>{ let em=prompt('Email for reset demo'); if(em) alert(`Reset link sent to ${em} (simulated)`); });
+    document.getElementById('exportBackupBtn')?.addEventListener('click',()=>{ let data={projects,extensions,currentHtmlCode}; let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'})); a.download=`mjhs_backup_${currentUser}.json`; a.click(); });
+    document.getElementById('importBackupBtn')?.addEventListener('click',()=>{ let inp=document.createElement('input'); inp.type='file'; inp.accept='application/json'; inp.onchange=e=>{ let f=e.target.files[0]; let r=new FileReader(); r.onload=ev=>{ let d=JSON.parse(ev.target.result); projects=d.projects||{}; extensions=d.extensions||{}; currentHtmlCode=d.currentHtmlCode||currentHtmlCode; saveAllData(); renderProjects(); renderExtensions(); document.getElementById('htmlCode').value=currentHtmlCode; refreshPreview(); alert('Restored'); }; r.readAsText(f); }; inp.click(); });
+    document.getElementById('globalShareBtn')?.addEventListener('click',()=>{ if(navigator.share) navigator.share({title:'MJH Studio'}); else alert('Copy link: '+location.href); });
+    document.getElementById('autoBtn')?.addEventListener('click',()=>alert('Auto feature coming soon'));
+    document.getElementById('globalEditBtn')?.addEventListener('click',()=>navigateTo('editor'));
+    document.getElementById('globalTrashBtn')?.addEventListener('click',()=>{ if(confirm('Delete all projects & extensions?')){ projects={}; extensions={}; saveAllData(); renderProjects(); renderExtensions(); alert('Cleared'); } });
+    document.getElementById('darkModeToggle')?.addEventListener('click',()=>{ document.body.classList.toggle('dark'); localStorage.setItem('mjhs_dark',document.body.classList.contains('dark')?'enabled':'disabled'); });
+    if(localStorage.getItem('mjhs_dark')==='enabled') document.body.classList.add('dark');
+    document.getElementById('translateBtn')?.addEventListener('click',()=>{ let s=document.createElement('script'); s.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'; document.body.appendChild(s); window.googleTranslateElementInit=function(){ new google.translate.TranslateElement({pageLanguage:'en'},'translateBtn'); }; alert('Translate widget added'); });
+    document.getElementById('runPreviewBtn')?.addEventListener('click',refreshPreview);
+    document.getElementById('saveHtmlProjectBtn')?.addEventListener('click',saveHtmlProject);
+    document.getElementById('genCodeBtn')?.addEventListener('click',genBlocklyCode);
+    document.getElementById('saveBlocklyProjectBtn')?.addEventListener('click',saveBlocklyProj);
+    function navigateTo(p){ document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active')); let t=document.getElementById(`page${p.charAt(0).toUpperCase()+p.slice(1)}`); if(t) t.classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b=>{ if(b.dataset.nav===p) b.classList.add('active'); else b.classList.remove('active'); }); }
+    window.navigateTo=navigateTo;
+    document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>navigateTo(b.dataset.nav));
+
+    // Learning Center Tutorials
+    const tutorialDiv=document.getElementById('tutorialContent');
+    function showTutorial(title, steps, diagram, finalCode){
+        let html=`<h3>${title}</h3><div class="diagram">${diagram}</div>`;
+        steps.forEach((step,i)=>{ html+=`<div class="tutorial-step"><strong>Step ${i+1}:</strong> ${step}</div>`; });
+        html+=`<div class="toolbar"><button id="applyFinalCodeBtn" class="primary">✨ Try Complete Example</button></div><p>After learning, use the Practice Zone above to create your own!</p>`;
+        tutorialDiv.innerHTML=html;
+        document.getElementById('applyFinalCodeBtn')?.addEventListener('click',()=>{ document.getElementById('practiceCode').value=finalCode; document.getElementById('runPracticeBtn').click(); });
+    }
+    document.getElementById('learnHtmlBtn')?.addEventListener('click',()=>{ showTutorial('HTML Basics',['Step 1: HTML structure (DOCTYPE, html, head, body)','Step 2: Add headings, paragraphs','Step 3: Insert images & links','Step 4: Style with inline CSS','Step 5: Add JavaScript events'],'┌─────────────────┐\n│  &lt;html&gt;       │\n│  ┌───────────┐  │\n│  │ &lt;body&gt;   │  │\n│  │  Hello    │  │\n│  │ &lt;/body&gt;  │  │\n│  └───────────┘  │\n│  &lt;/html&gt;       │\n└─────────────────┘','<!DOCTYPE html>\n<html>\n<head><title>My Page</title></head>\n<body>\n<h1>Hello MJH Studio</h1>\n<p>This is my first web page.</p>\n<button onclick="alert(\'You learned HTML!\')">Click me</button>\n</body>\n</html>'); });
+    document.getElementById('learnBlocklyBtn')?.addEventListener('click',()=>{ showTutorial('Blockly Programming',['Step 1: Drag blocks from toolbox','Step 2: Connect "print" and "text"','Step 3: Add math/number blocks','Step 4: Generate JavaScript code','Step 5: Use that code in HTML editor'],'┌──────────────┐    ┌──────────┐\n│  print "Hi"  │ -> │  alert() │\n└──────────────┘    └──────────┘\n       |                 |\n    ┌──▼─────────────────▼──┐\n    │   JavaScript Code     │\n    └───────────────────────┘','// Generated Blockly code:\nconsole.log("Hello from Blockly");\nalert("You built this with blocks!");'); });
+    document.getElementById('learnExtBtn')?.addEventListener('click',()=>{ showTutorial('Creating Extensions',['Step 1: Write JSON with "script" field','Step 2: Add custom blocks or functions','Step 3: Save extension','Step 4: Load it to run code','Step 5: Modify existing app behavior'],'┌────────────────┐\n│ { "script":     │\n│   "alert(1)" }  │\n└───────┬────────┘\n        ▼\n┌───────────────┐\n│ Extension runs│\n│ in app safely │\n└───────────────┘','{"name":"MyPlugin","script":"alert(\'Extension loaded! You can now add new blocks.\')","blocks":[]}'); });
+    document.getElementById('learnVideoBtn')?.addEventListener('click',()=>{ showTutorial('Video Editing',['Step 1: Upload a video file','Step 2: Preview it','Step 3: Use trim sliders (simulated)','Step 4: Download edited version','Step 5: Combine with HTML/Blockly projects'],'┌────────┐   ┌──────────┐   ┌──────────┐\n│ Upload │ → │ Preview │ → │ Download│\n└────────┘   └──────────┘   └──────────┘','Video editing demo: Use the Video Studio tab to upload, trim (simulated) and download your creations.'); });
+    document.getElementById('runPracticeBtn')?.addEventListener('click',()=>{ let code=document.getElementById('practiceCode').value; document.getElementById('practicePreview').srcdoc=code; });
+    document.getElementById('practiceCode').value='<h1>Try HTML here!</h1><p>Edit and click Run.</p>';
+</script>
+</body>
+</html>
