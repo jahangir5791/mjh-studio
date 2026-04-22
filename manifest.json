@@ -1,0 +1,13 @@
+{
+  "background_color": "#0f1729",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "MJH Studio",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "MJH Studio",
+  "start_url": "/",
+  "theme_color": "#1f6e8c",
+  "id": "/",
+  "description": "MJH Studio is a complete app development platform. Learn HTML, Blockly programming, create custom extensions, edit videos, and build real projects - all in one place. Perfect for beginners and developers."
+}
