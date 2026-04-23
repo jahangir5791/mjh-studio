@@ -1,331 +1,602 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>MJH Studio</title>
+    <title>MJH Studio - Complete Creative Suite</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22MJH%20Studio%22,%22short_name%22:%22MJH%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22theme_color%22:%22%230d6efd%22,%22background_color%22:%22%23121826%22,%22icons%22:[{%22src%22:%22https://via.placeholder.com/192?text=MJH%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22}]}">
+    <meta name="theme-color" content="#0d6efd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!-- Google AdMob SDK -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4876264020851039" crossorigin="anonymous"></script>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    
+    <!-- ffmpeg.wasm for REAL video editing -->
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/ffmpeg.min.js"></script>
+    
+    <!-- Blockly -->
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <script src="https://unpkg.com/blockly/blocks.js"></script>
     <script src="https://unpkg.com/blockly/javascript.js"></script>
-
-<!-- PWA Manifest -->
-<link rel="manifest" href="/mjh-studio/manifest.json">
-
-<meta name="theme-color" content="#0d6efd">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-<!-- Service Worker -->
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/mjh-studio/sw.js")
-      .then(() => console.log("Service Worker Registered"))
-      .catch(err => console.log("SW Error:", err));
-  });
-}
-</script>
-
-<style>
-        * { margin: 0; padding: 0; box-sizing: border-box; transition: background 0.2s, color 0.2s; }
-        :root { --bg: #f4f7fc; --surface: #ffffff; --card: #ffffff; --text: #0a2540; --text-sec: #2c5a7a; --border: #dce5ef; --accent: #1f6e8c; --soft: #e0f0f5; }
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg: #f4f7fc; --surface: #ffffff; --card: #ffffff; --text: #0a2540; --text-sec: #2c5a7a; --border: #dce5ef; --accent: #1f6e8c; --soft: #e0f0f5; --success: #10b981; --warning: #f59e0b; }
         body.dark { --bg: #121826; --surface: #1e293b; --card: #1e2a3a; --text: #eef2ff; --text-sec: #b9c8e6; --border: #2d3a4b; --accent: #3b9bcb; --soft: #1f3e4c; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; }
         
-        /* 3D Splash Screen */
-        #splash {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            transition: opacity 0.6s;
-            text-align: center;
-        }
-        .scene {
-            width: 160px;
-            height: 160px;
-            perspective: 600px;
-            margin-bottom: 30px;
-        }
-        .cube {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: spin 8s infinite linear;
-        }
-        .cube__face {
-            position: absolute;
-            width: 160px;
-            height: 160px;
-            background: linear-gradient(135deg, #1e6f5c, #289672);
-            border: 2px solid rgba(255,255,255,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 0 8px rgba(0,0,0,0.5);
-            border-radius: 20px;
-            backdrop-filter: blur(4px);
-        }
-        .cube__face--front  { transform: rotateY(0deg) translateZ(80px); }
-        .cube__face--back   { transform: rotateY(180deg) translateZ(80px); }
-        .cube__face--right  { transform: rotateY(90deg) translateZ(80px); }
-        .cube__face--left   { transform: rotateY(-90deg) translateZ(80px); }
-        .cube__face--top    { transform: rotateX(90deg) translateZ(80px); }
+        /* Splash Screen */
+        #splash { position: fixed; top:0; left:0; width:100%; height:100%; background: linear-gradient(135deg, #0f172a, #1e293b); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; transition: opacity 0.6s; text-align: center; }
+        .scene { width: 160px; height: 160px; perspective: 600px; margin-bottom: 30px; }
+        .cube { width:100%; height:100%; position:relative; transform-style: preserve-3d; animation: spin 8s infinite linear; }
+        .cube__face { position: absolute; width:160px; height:160px; background: linear-gradient(135deg,#1e6f5c,#289672); border:2px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:bold; color:white; border-radius:20px; }
+        .cube__face--front { transform: rotateY(0deg) translateZ(80px); }
+        .cube__face--back { transform: rotateY(180deg) translateZ(80px); }
+        .cube__face--right { transform: rotateY(90deg) translateZ(80px); }
+        .cube__face--left { transform: rotateY(-90deg) translateZ(80px); }
+        .cube__face--top { transform: rotateX(90deg) translateZ(80px); }
         .cube__face--bottom { transform: rotateX(-90deg) translateZ(80px); }
-        
-        @keyframes spin {
-            from { transform: rotateX(0) rotateY(0); }
-            to { transform: rotateX(360deg) rotateY(360deg); }
-        }
-        .splash-title {
-            font-size: 34px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: 2px;
-            margin-top: 20px;
-        }
-        .splash-sub {
-            margin-top: 12px;
-            color: #94a3b8;
-            font-size: 16px;
-        }
-        .spinner {
-            margin-top: 30px;
-            width: 34px;
-            height: 34px;
-            border: 3px solid rgba(255,255,255,0.2);
-            border-top: 3px solid #3b82f6;
-            border-radius: 50%;
-            animation: spinCircle 1s linear infinite;
-        }
+        @keyframes spin { from { transform: rotateX(0) rotateY(0); } to { transform: rotateX(360deg) rotateY(360deg); } }
         @keyframes spinCircle { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .spinner { width:34px; height:34px; border:3px solid rgba(255,255,255,0.2); border-top:3px solid #3b82f6; border-radius:50%; animation: spinCircle 1s linear infinite; }
+        .splash-title { font-size:34px; background: linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip:text; background-clip:text; color:transparent; }
         
+        /* Main App */
         .main-app { display: none; height: 100vh; flex-direction: column; }
-        .app-header { background: var(--surface); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .logo-studio { background: linear-gradient(135deg, #1e6f5c, #289672); padding: 6px 14px; border-radius: 40px; font-weight: 800; font-size: 22px; color: white; }
-        .action-icons { display: flex; gap: 18px; color: var(--text-sec); }
-        .action-icons i { font-size: 1.3rem; cursor: pointer; }
-        .dark-toggle, .translate-btn { background: var(--soft); border: none; padding: 6px 12px; border-radius: 40px; cursor: pointer; margin-left: 8px; }
+        .app-header { background: var(--surface); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); flex-shrink:0; flex-wrap: wrap; gap: 8px; }
+        .logo-studio { background: linear-gradient(135deg,#1e6f5c,#289672); padding:6px 14px; border-radius:40px; font-weight:800; color:white; }
+        .action-icons i { font-size:1.3rem; margin:0 5px; cursor:pointer; color:var(--text-sec); }
         .pages-container { flex: 1; position: relative; overflow: hidden; }
-        .page { position: absolute; top:0; left:0; width:100%; height:100%; overflow-y: auto; padding: 18px; opacity: 0; visibility: hidden; transition: opacity 0.3s; }
-        .page.active { opacity: 1; visibility: visible; }
-        .bottom-nav { display: flex; background: var(--surface); border-top: 1px solid var(--border); padding: 8px 0 12px; justify-content: space-around; }
-        .nav-btn { background: none; border: none; padding: 6px; font-size: 12px; color: var(--text-sec); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .nav-btn.active { color: var(--accent); font-weight: bold; }
-        .back-btn { background: var(--soft); border: none; padding: 8px 16px; border-radius: 40px; margin-bottom: 18px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-        .toolbar { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
-        button { background: var(--soft); border: none; padding: 8px 18px; border-radius: 40px; cursor: pointer; }
+        .page { position: absolute; top:0; left:0; width:100%; height:100%; overflow-y: auto; padding: 18px; opacity:0; visibility:hidden; transition: opacity 0.2s; padding-bottom: 80px; }
+        .page.active { opacity:1; visibility:visible; }
+        
+        /* Bottom Navigation - Fixed properly */
+        .bottom-nav { background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0 12px; flex-shrink:0; position: relative; z-index: 10; margin-bottom: env(safe-area-inset-bottom, 0px); gap: 4px; flex-wrap: wrap; }
+        .nav-btn { background: none; border: none; font-size: 11px; color: var(--text-sec); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 10px; border-radius: 30px; transition: 0.1s; }
+        .nav-btn.active { color: var(--accent); font-weight: bold; background: var(--soft); }
+        .nav-btn i { font-size: 18px; }
+        
+        /* Ad Container */
+        .ad-container { width: 100%; text-align: center; background: var(--surface); border-top: 1px solid var(--border); padding: 4px 0; flex-shrink: 0; }
+        .ad-label { font-size: 10px; color: var(--text-sec); margin-bottom: 2px; }
+        
+        /* GDPR Consent */
+        .gdpr-consent { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 2px solid var(--accent); padding: 16px; z-index: 3000; display: none; flex-direction: column; gap: 12px; box-shadow: 0 -4px 20px rgba(0,0,0,0.2); }
+        
+        footer { text-align: center; font-size: 10px; padding: 6px; color: var(--text-sec); background: var(--surface); border-top: 1px solid var(--border); flex-shrink:0; }
+        .back-btn { background: var(--soft); border: none; padding: 6px 16px; border-radius: 40px; margin-bottom: 18px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+        .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+        button { background: var(--soft); border: none; padding: 8px 18px; border-radius: 40px; cursor: pointer; font-weight:500; transition: 0.2s; }
         button.primary { background: var(--accent); color: white; }
-        textarea, input { width: 100%; border-radius: 20px; border: 1px solid var(--border); background: var(--card); padding: 12px; font-family: monospace; }
-        iframe, video { width: 100%; border-radius: 24px; border: 1px solid var(--border); background: white; }
-        .card-item, .tutorial-step { background: var(--card); padding: 14px; border-radius: 24px; margin: 12px 0; border: 1px solid var(--border); }
-        .diagram { background: var(--soft); padding: 16px; border-radius: 20px; font-family: monospace; white-space: pre; overflow-x: auto; margin: 12px 0; }
+        button.success { background: var(--success); color: white; }
+        textarea, input { width:100%; border-radius:20px; border:1px solid var(--border); background:var(--card); padding:12px; font-family: monospace; margin:5px 0; }
+        iframe, video { width:100%; border-radius:24px; border:1px solid var(--border); background:white; }
+        .card-item { background: var(--card); padding: 14px; border-radius: 24px; margin: 12px 0; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         .settings-group { background: var(--card); border-radius: 28px; padding: 18px; margin: 20px 0; }
-        .guide-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 20px; overflow: hidden; }
-        .guide-table th, .guide-table td { border: 1px solid var(--border); padding: 10px; text-align: left; vertical-align: top; }
-        .guide-table th { background: var(--accent); color: white; }
-        footer { text-align: center; font-size: 10px; padding: 8px; color: var(--text-sec); }
-        h2 { font-size: 1.6rem; }
-        @media (max-width: 600px) { .guide-table th, .guide-table td { padding: 6px; font-size: 11px; } .cube__face { width: 120px; height: 120px; font-size: 24px; } .cube__face--front, .cube__face--back, .cube__face--right, .cube__face--left, .cube__face--top, .cube__face--bottom { transform: translateZ(60px); } .scene { width: 120px; height: 120px; } }
+        .drag-builder { background: var(--soft); border-radius: 28px; padding: 12px; min-height: 120px; margin: 15px 0; display: flex; flex-wrap: wrap; gap: 12px; }
+        .drag-element { background: var(--accent); color: white; padding: 8px 16px; border-radius: 40px; cursor: grab; user-select: none; display: inline-block; }
+        .builder-canvas { background: var(--card); border: 2px dashed var(--border); border-radius: 24px; min-height: 160px; padding: 12px; margin-top: 12px; }
+        .user-badge { display: flex; align-items: center; gap: 8px; background: var(--soft); padding: 5px 12px; border-radius: 40px; }
+        .progress-bar { width: 100%; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { width: 0%; height: 100%; background: var(--accent); transition: width 0.3s; }
+        @media (max-width: 600px) { .nav-btn { padding: 4px 8px; font-size: 10px; } .nav-btn i { font-size: 16px; } .bottom-nav { gap: 2px; } }
     </style>
 </head>
 <body>
 <div id="splash">
-    <div class="scene">
-        <div class="cube">
-            <div class="cube__face cube__face--front">MJH</div>
-            <div class="cube__face cube__face--back">MJH</div>
-            <div class="cube__face cube__face--right">STUDIO</div>
-            <div class="cube__face cube__face--left">STUDIO</div>
-            <div class="cube__face cube__face--top">3D</div>
-            <div class="cube__face cube__face--bottom">APP</div>
-        </div>
-    </div>
+    <div class="scene"><div class="cube"><div class="cube__face cube__face--front">MJH</div><div class="cube__face cube__face--back">MJH</div><div class="cube__face cube__face--right">STUDIO</div><div class="cube__face cube__face--left">STUDIO</div><div class="cube__face cube__face--top">3D</div><div class="cube__face cube__face--bottom">APP</div></div></div>
     <div class="splash-title">MJH STUDIO</div>
-    <div class="splash-sub">Create • Code • Extend</div>
+    <div class="splash-sub">Firebase • AdMob • Video Edit • Complete</div>
     <div class="spinner"></div>
+</div>
+
+<!-- GDPR Banner -->
+<div id="gdprConsent" class="gdpr-consent">
+    <p><i class="fas fa-shield-alt"></i> We use cookies and ads to improve your experience. Do you accept?</p>
+    <div><button id="acceptAds" class="primary">Accept All</button><button id="declineAds">Decline</button></div>
+</div>
+
+<!-- Ad Banner -->
+<div id="adBanner" class="ad-container" style="display: none;">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px" data-ad-client="ca-pub-4876264020851039" data-ad-slot="6928763248"></ins>
 </div>
 
 <div class="main-app" id="mainApp">
     <div class="app-header">
         <div class="logo-studio">MJH</div>
-        <div class="action-icons"><i class="fas fa-share-alt" id="globalShareBtn"></i><i class="fas fa-magic" id="autoBtn"></i><i class="fas fa-edit" id="globalEditBtn"></i><i class="fas fa-trash-alt" id="globalTrashBtn"></i></div>
-        <div><button class="translate-btn" id="translateBtn"><i class="fas fa-language"></i> Translate</button><button class="dark-toggle" id="darkModeToggle"><i class="fas fa-moon"></i> Dark</button></div>
+        <div class="action-icons"><i class="fas fa-share-alt" id="globalShareBtn"></i><i class="fas fa-cloud-upload-alt" id="cloudSaveBtn"></i><i class="fas fa-trash-alt" id="globalTrashBtn"></i><i class="fas fa-gift" id="rewardedAdBtn" style="color: gold;"></i></div>
+        <div style="display: flex; gap: 8px;">
+            <div id="userBadge" class="user-badge" style="display:none;"><i class="fas fa-user-circle"></i><span id="userName"></span><button id="logoutBtn" style="padding:2px 8px; font-size:11px;">Exit</button></div>
+            <button class="translate-btn" id="translateBtn"><i class="fas fa-language"></i></button>
+            <button class="dark-toggle" id="darkModeToggle"><i class="fas fa-moon"></i></button>
+        </div>
     </div>
 
     <div class="pages-container">
-        <!-- LEARNING CENTER with GUIDE TABLE -->
+        <!-- Learn Page -->
         <div class="page" data-page="learn" id="pageLearn">
             <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2><i class="fas fa-graduation-cap"></i> Learning Center</h2>
-            <p>Choose a topic. Follow steps, see diagrams, try live editor, then build your own.</p>
-            <div class="toolbar">
-                <button class="primary" id="learnHtmlBtn">📝 HTML Basics</button>
-                <button class="primary" id="learnBlocklyBtn">🧩 Blockly</button>
-                <button class="primary" id="learnExtBtn">🔌 Extensions</button>
-                <button class="primary" id="learnVideoBtn">🎥 Video Edit</button>
-            </div>
-            <div id="tutorialContent" class="settings-group"><p>Select a topic above to start learning step by step.</p></div>
-            
-            <div class="settings-group">
-                <h3><i class="fas fa-question-circle"></i> Quick User Guide (সহায়িকা)</h3>
-                <div style="overflow-x: auto;">
-                    <table class="guide-table">
-                        <thead><tr><th>Feature (বৈশিষ্ট্য)</th><th>What it does (কী করে)</th><th>How to use (কীভাবে ব্যবহার করবেন)</th></tr></thead>
-                        <tbody>
-                            <tr><td>🎓 Learn</td><td>Tutorials + Practice Zone</td><td>Click topic → read steps → try code → run</td></tr>
-                            <tr><td>✏️ Editor</td><td>HTML/CSS/JS code + live preview</td><td>Write code → Click Run Preview → see output</td></tr>
-                            <tr><td>🧩 Blockly</td><td>Visual block programming</td><td>Drag blocks → Generate Code → copy to editor</td></tr>
-                            <tr><td>🔌 Extensions</td><td>Create custom plugins (JSON)</td><td>New Extension → name + JSON → Save → Load</td></tr>
-                            <tr><td>🎥 Video</td><td>Upload & download videos</td><td>Choose file → preview → download</td></tr>
-                            <tr><td>📁 Projects</td><td>Save/Load projects, backup</td><td>Save project → Load later → Export/Import JSON</td></tr>
-                            <tr><td>🌙 Dark Mode</td><td>Switch light/dark theme</td><td>Click Dark button in header</td></tr>
-                            <tr><td>🔗 Share</td><td>Share app link</td><td>Click Share icon in header</td></tr>
-                            <tr><td>🗑️ Trash</td><td>Delete all projects & extensions</td><td>Click Trash icon → confirm</td></tr>
-                            <tr><td>🌐 Translate</td><td>Translate UI to any language</td><td>Click Translate button → select language</td></tr>
-                            <tr><td>💾 Backup</td><td>Export/Import all data</td><td>Projects tab → Export Backup / Import Backup</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p style="margin-top:12px; font-size:12px;">📌 For detailed step-by-step tutorials, click any topic button above.</p>
-            </div>
-
-            <div id="livePracticeArea" style="margin-top:20px;">
-                <h3>✏️ Practice Zone (Try yourself)</h3>
-                <textarea id="practiceCode" rows="6" placeholder="Write HTML or code here..."></textarea>
-                <button id="runPracticeBtn" class="primary">Run & See Result</button>
-                <iframe id="practicePreview" style="height:200px; margin-top:10px;" srcdoc="<h3>Result will appear here</h3>"></iframe>
-            </div>
+            <div class="toolbar"><button class="primary" id="learnHtmlBtn">📝 HTML</button><button class="primary" id="learnBlocklyBtn">🧩 Blockly</button><button class="primary" id="learnExtBtn">🔌 Extensions</button><button class="primary" id="learnDragBtn">🖱️ Drag UI</button><button class="primary" id="learnVideoEditBtn">🎬 Video Edit</button></div>
+            <div id="tutorialContent" class="settings-group"><p>Select a topic to start learning</p></div>
+            <div id="livePracticeArea"><h3>✏️ Practice Zone</h3><textarea id="practiceCode" rows="5" placeholder="Write HTML/CSS/JS"></textarea><button id="runPracticeBtn" class="primary">Run</button><iframe id="practicePreview" style="height:200px; margin-top:10px;" srcdoc="<h3>Result</h3>"></iframe></div>
         </div>
-
-        <div class="page" data-page="editor" id="pageEditor">
-            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
-            <h2>✏️ HTML Studio</h2>
-            <div class="toolbar"><button id="runPreviewBtn" class="primary">Run Preview</button><button id="saveHtmlProjectBtn">Save Project</button></div>
-            <textarea id="htmlCode" rows="10"></textarea>
-            <h3>Preview</h3>
-            <iframe id="previewFrame"></iframe>
-        </div>
-
-        <div class="page" data-page="blockly" id="pageBlockly">
-            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
-            <h2>🧩 Blockly</h2>
-            <div id="blocklyDiv" style="height: 380px; background: var(--card); border-radius: 24px; margin: 12px 0;"></div>
-            <div class="toolbar"><button id="genCodeBtn" class="primary">Generate Code</button><button id="saveBlocklyProjectBtn">Save Blockly</button></div>
-            <textarea id="generatedCode" rows="6"></textarea>
-        </div>
-
-        <div class="page" data-page="extensions" id="pageExtensions">
-            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
-            <h2>Extensions Lab</h2>
-            <div class="toolbar"><button id="newExtensionBtn" class="primary">New Extension</button><button id="loadExtensionBtn">Load Demo</button></div>
-            <div id="extensionList"></div>
-            <div id="extensionEditor" style="display:none;"><input type="text" id="extName" placeholder="Name"><textarea id="extCode" rows="6"></textarea><button id="saveExtensionBtn">Save</button><button id="cancelExtBtn">Cancel</button></div>
-        </div>
-
+        
+        <!-- Editor -->
+        <div class="page" data-page="editor" id="pageEditor"><button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button><h2>✏️ HTML Studio</h2><div class="toolbar"><button id="runPreviewBtn" class="primary">Run Preview</button><button id="saveHtmlProjectBtn">Save Project</button></div><textarea id="htmlCode" rows="10"></textarea><h3>Preview</h3><iframe id="previewFrame"></iframe></div>
+        
+        <!-- Blockly -->
+        <div class="page" data-page="blockly" id="pageBlockly"><button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button><h2>🧩 Blockly</h2><div id="blocklyDiv" style="height: 380px; background: var(--card); border-radius: 24px; margin:12px 0;"></div><div class="toolbar"><button id="genCodeBtn" class="primary">Generate Code</button><button id="saveBlocklyProjectBtn">Save Blockly</button></div><textarea id="generatedCode" rows="6"></textarea></div>
+        
+        <!-- Extensions -->
+        <div class="page" data-page="extensions" id="pageExtensions"><button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button><h2>🔌 Extensions Sandbox</h2><div class="toolbar"><button id="newExtensionBtn" class="primary">New Extension</button><button id="loadExtensionBtn">Load Demo</button></div><div id="extensionList"></div><div id="extensionEditor" style="display:none;"><input type="text" id="extName" placeholder="Extension Name"><textarea id="extCode" rows="5" placeholder='{"name":"myExt","script":"alert(\"sandbox\")"}'></textarea><button id="saveExtensionBtn">Save</button><button id="cancelExtBtn">Cancel</button></div></div>
+        
+        <!-- Video Studio with REAL ffmpeg editing -->
         <div class="page" data-page="video" id="pageVideo">
             <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
-            <h2>Video Studio</h2>
-            <div class="settings-group"><h3>Tutorials</h3><iframe width="100%" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe></div>
-            <div class="settings-group"><input type="file" id="videoUpload" accept="video/*"><video id="videoPreview" controls style="margin-top:12px;"></video><button id="downloadVideoBtn">Download</button></div>
+            <h2><i class="fas fa-video"></i> Video Studio (Real Editing)</h2>
+            <div class="settings-group">
+                <h3>1. Upload Video</h3>
+                <input type="file" id="videoUpload" accept="video/mp4,video/webm">
+                <video id="videoPreview" controls style="margin-top:12px; max-height:200px;"></video>
+            </div>
+            <div class="settings-group">
+                <h3>2. Edit Video (ffmpeg)</h3>
+                <div class="toolbar">
+                    <button id="loadFFmpegBtn" class="primary"><i class="fas fa-download"></i> Load FFmpeg</button>
+                    <button id="trimVideoBtn">✂️ Trim (0-5 sec)</button>
+                    <button id="cropVideoBtn">📐 Crop to 480p</button>
+                    <button id="compressVideoBtn">🗜️ Compress</button>
+                </div>
+                <div id="ffmpegStatus" style="font-size:12px; margin:8px 0;">FFmpeg not loaded. Click "Load FFmpeg" first.</div>
+                <div class="progress-bar"><div id="editProgress" class="progress-fill"></div></div>
+            </div>
+            <div class="settings-group">
+                <h3>3. Download Edited Video</h3>
+                <button id="downloadEditedVideoBtn" class="success">💾 Download Edited Video</button>
+            </div>
         </div>
-
-        <div class="page" data-page="projects" id="pageProjects">
-            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
-            <h2>My Projects</h2>
-            <div id="projectList"></div>
-            <div class="settings-group"><button id="resetPasswordBtn">Password Reset (Demo)</button><button id="exportBackupBtn">Export Backup</button><button id="importBackupBtn">Import Backup</button></div>
-        </div>
-
-        <div class="page" data-page="login" id="pageLogin"><div style="max-width:400px; margin:auto; padding-top:15%;"><div class="settings-group"><div id="loginForm"><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Password"><button id="doLoginBtn" class="primary">Login</button><p>No account? <button id="showSignupBtn" style="background:none;">Sign Up</button></p></div><div id="signupForm" style="display:none;"><input type="text" id="signupName" placeholder="Name"><input type="email" id="signupEmail" placeholder="Email"><input type="password" id="signupPassword" placeholder="Password"><button id="doSignupBtn" class="primary">Sign Up</button><p>Already? <button id="showLoginBtn" style="background:none;">Login</button></p></div></div></div></div>
+        
+        <!-- Drag-Drop Builder -->
+        <div class="page" data-page="dragbuilder" id="pageDragBuilder"><button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button><h2><i class="fas fa-arrows-alt"></i> Drag-Drop UI Builder</h2><div class="drag-builder" id="draggableElements"><div class="drag-element" draggable="true" data-tag="<h2>Drag Heading</h2>">📌 Heading</div><div class="drag-element" draggable="true" data-tag="<p>Text paragraph here.</p>">📝 Paragraph</div><div class="drag-element" draggable="true" data-tag="<button onclick='alert(\"Hi\")'>Button</button>">🔘 Button</div><div class="drag-element" draggable="true" data-tag="<img src='https://picsum.photos/100/60'>">🖼️ Image</div></div><div class="builder-canvas" id="builderCanvas"><p>Drop elements here →</p></div><div class="toolbar"><button id="generateFromBuilder" class="primary">Generate HTML</button><button id="clearCanvas">Clear</button></div><textarea id="builderOutput" rows="5" placeholder="Generated code"></textarea><button id="useBuilderInEditor" class="primary">Use in Editor</button></div>
+        
+        <!-- Projects -->
+        <div class="page" data-page="projects" id="pageProjects"><button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button><h2>📁 My Projects (Firebase Cloud)</h2><div id="projectList"></div><div class="toolbar"><button id="exportBackupBtn">Export Backup</button><button id="importBackupBtn">Import Backup</button><button id="cloudSyncBtn" class="primary"><i class="fas fa-cloud-upload-alt"></i> Sync to Cloud</button></div><div class="settings-group"><h3>📱 APK Build Guide</h3><p><strong>Option 1 (Easy):</strong> Go to <a href="https://www.pwabuilder.com" target="_blank">PWA Builder</a> → Enter this URL → Download Android APK</p><p><strong>Option 2 (Professional):</strong> Use Capacitor: npm install -g @capacitor/cli → npx cap init → npx cap add android</p></div></div>
+        
+        <!-- Login -->
+        <div class="page" data-page="login" id="pageLogin"><div style="max-width:400px; margin:auto; padding-top:10%;"><div class="settings-group"><div id="loginForm"><h3>Login to MJH Studio</h3><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Password"><button id="doLoginBtn" class="primary">Login</button><p>No account? <button id="showSignupBtn" style="background:none; color:var(--accent);">Sign Up</button></p></div><div id="signupForm" style="display:none;"><h3>Create Account</h3><input type="text" id="signupName" placeholder="Full Name"><input type="email" id="signupEmail" placeholder="Email"><input type="password" id="signupPassword" placeholder="Password"><button id="doSignupBtn" class="primary">Sign Up</button><p>Already? <button id="showLoginBtn" style="background:none; color:var(--accent);">Login</button></p></div></div></div></div>
     </div>
 
-    <div class="bottom-nav" id="bottomNav" style="display:none;">
+    <div class="bottom-nav" id="bottomNav">
         <button class="nav-btn" data-nav="learn"><i class="fas fa-graduation-cap"></i> Learn</button>
         <button class="nav-btn" data-nav="editor"><i class="fas fa-code"></i> Editor</button>
         <button class="nav-btn" data-nav="blockly"><i class="fas fa-puzzle-piece"></i> Blockly</button>
-        <button class="nav-btn" data-nav="extensions"><i class="fas fa-plug"></i> Extensions</button>
+        <button class="nav-btn" data-nav="extensions"><i class="fas fa-plug"></i> Ext</button>
         <button class="nav-btn" data-nav="video"><i class="fas fa-video"></i> Video</button>
+        <button class="nav-btn" data-nav="dragbuilder"><i class="fas fa-hand-pointer"></i> Drag UI</button>
         <button class="nav-btn" data-nav="projects"><i class="fas fa-folder"></i> Projects</button>
     </div>
-    <footer>MJH Studio • Learn • Practice • Create</footer>
+    <footer>🔥 Firebase + AdMob + FFmpeg • MJH Studio Complete • Create & Code</footer>
 </div>
 
 <script>
-    setTimeout(() => { document.getElementById('splash').style.opacity='0'; setTimeout(()=>{ document.getElementById('splash').style.display='none'; document.getElementById('mainApp').style.display='flex'; checkLogin(); },600); },3000);
+    // ========== FIREBASE CONFIG ==========
+    const firebaseConfig = {
+        apiKey: "AIzaSyAlA7MDWL2WKC3OH3kxMtkHZ8w5GpSt4y8",
+        authDomain: "mjh-studio.firebaseapp.com",
+        projectId: "mjh-studio",
+        storageBucket: "mjh-studio.firebasestorage.app",
+        messagingSenderId: "899252366841",
+        appId: "1:899252366841:web:5795ec41a51f2d0c4ba128",
+        measurementId: "G-7RHTQDWYVH"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    // ========== AD CONFIG ==========
+    let adsEnabled = false;
+    function enableAds() { adsEnabled = true; localStorage.setItem('gdpr_choice', 'accepted'); document.getElementById('gdprConsent').style.display = 'none'; document.getElementById('adBanner').style.display = 'block'; try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {} }
+    function declineAds() { adsEnabled = false; localStorage.setItem('gdpr_choice', 'declined'); document.getElementById('gdprConsent').style.display = 'none'; document.getElementById('adBanner').style.display = 'none'; }
+    function showInterstitial() { if(adsEnabled) console.log("Interstitial triggered"); }
+    function showRewarded() { if(!adsEnabled) { alert("Please accept ads to earn rewards!"); return; } alert("🎁 You earned 10 MJH Coins!"); localStorage.setItem('mjh_coins', (parseInt(localStorage.getItem('mjh_coins')||0)+10)); alert("Total coins: "+localStorage.getItem('mjh_coins')); }
+    
+    document.getElementById('acceptAds')?.addEventListener('click', enableAds);
+    document.getElementById('declineAds')?.addEventListener('click', declineAds);
+    document.getElementById('rewardedAdBtn')?.addEventListener('click', showRewarded);
+    if(localStorage.getItem('gdpr_choice') === 'accepted') enableAds();
+    else if(!localStorage.getItem('gdpr_choice')) document.getElementById('gdprConsent').style.display = 'flex';
+    
+    // ========== APP STATE ==========
+    let currentUser = null, projects = {}, extensions = {}, currentHtmlCode = '<!DOCTYPE html><html><head><title>MJH</title></head><body><h1>Welcome to MJH Studio</h1><p>Complete Creative Suite</p></body></html>';
+    let blocklyWorkspace = null;
+    
+    // FFmpeg Video Editing
+    let ffmpeg = null, currentVideoFile = null, editedVideoBlob = null;
+    const loadFFmpegBtn = document.getElementById('loadFFmpegBtn');
+    const ffmpegStatus = document.getElementById('ffmpegStatus');
+    const editProgress = document.getElementById('editProgress');
+    
+    async function loadFFmpeg() {
+        ffmpegStatus.innerText = "Loading FFmpeg (first time may take 30s)...";
+        editProgress.style.width = "30%";
+        try {
+            const { FFmpeg } = window.FFmpeg;
+            ffmpeg = new FFmpeg();
+            await ffmpeg.load();
+            ffmpegStatus.innerText = "✓ FFmpeg ready! You can now edit videos.";
+            editProgress.style.width = "100%";
+            setTimeout(()=> editProgress.style.width = "0%", 1000);
+        } catch(e) { ffmpegStatus.innerText = "FFmpeg load error: "+e.message; editProgress.style.width = "0%"; }
+    }
+    
+    async function processVideo(action, params) {
+        if(!ffmpeg) { alert("Please load FFmpeg first!"); return null; }
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>MJH Studio - Complete Creative Suite</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22MJH%20Studio%22,%22short_name%22:%22MJH%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22theme_color%22:%22%230d6efd%22,%22background_color%22:%22%23121826%22,%22icons%22:[{%22src%22:%22https://via.placeholder.com/192?text=MJH%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22}]}">
+    <meta name="theme-color" content="#0d6efd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!-- Google AdMob SDK -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4876264020851039" crossorigin="anonymous"></script>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    
+    <!-- ffmpeg.wasm for REAL video editing -->
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/ffmpeg.min.js"></script>
+    
+    <!-- Blockly -->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/blockly/blocks.js"></script>
+    <script src="https://unpkg.com/blockly/javascript.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg: #f4f7fc; --surface: #ffffff; --card: #ffffff; --text: #0a2540; --text-sec: #2c5a7a; --border: #dce5ef; --accent: #1f6e8c; --soft: #e0f0f5; --success: #10b981; --warning: #f59e0b; }
+        body.dark { --bg: #121826; --surface: #1e293b; --card: #1e2a3a; --text: #eef2ff; --text-sec: #b9c8e6; --border: #2d3a4b; --accent: #3b9bcb; --soft: #1f3e4c; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; }
+        
+        /* Splash Screen */
+        #splash { position: fixed; top:0; left:0; width:100%; height:100%; background: linear-gradient(135deg, #0f172a, #1e293b); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; transition: opacity 0.6s; text-align: center; }
+        .scene { width: 160px; height: 160px; perspective: 600px; margin-bottom: 30px; }
+        .cube { width:100%; height:100%; position:relative; transform-style: preserve-3d; animation: spin 8s infinite linear; }
+        .cube__face { position: absolute; width:160px; height:160px; background: linear-gradient(135deg,#1e6f5c,#289672); border:2px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:bold; color:white; border-radius:20px; }
+        .cube__face--front { transform: rotateY(0deg) translateZ(80px); }
+        .cube__face--back { transform: rotateY(180deg) translateZ(80px); }
+        .cube__face--right { transform: rotateY(90deg) translateZ(80px); }
+        .cube__face--left { transform: rotateY(-90deg) translateZ(80px); }
+        .cube__face--top { transform: rotateX(90deg) translateZ(80px); }
+        .cube__face--bottom { transform: rotateX(-90deg) translateZ(80px); }
+        @keyframes spin { from { transform: rotateX(0) rotateY(0); } to { transform: rotateX(360deg) rotateY(360deg); } }
+        @keyframes spinCircle { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .spinner { width:34px; height:34px; border:3px solid rgba(255,255,255,0.2); border-top:3px solid #3b82f6; border-radius:50%; animation: spinCircle 1s linear infinite; }
+        .splash-title { font-size:34px; background: linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip:text; background-clip:text; color:transparent; }
+        
+        /* Main App */
+        .main-app { display: none; height: 100vh; flex-direction: column; }
+        .app-header { background: var(--surface); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); flex-shrink:0; flex-wrap: wrap; gap: 8px; }
+        .logo-studio { background: linear-gradient(135deg,#1e6f5c,#289672); padding:6px 14px; border-radius:40px; font-weight:800; color:white; }
+        .action-icons i { font-size:1.3rem; margin:0 5px; cursor:pointer; color:var(--text-sec); }
+        .pages-container { flex: 1; position: relative; overflow: hidden; }
+        .page { position: absolute; top:0; left:0; width:100%; height:100%; overflow-y: auto; padding: 18px; opacity:0; visibility:hidden; transition: opacity 0.2s; padding-bottom: 80px; }
+        .page.active { opacity:1; visibility:visible; }
+        
+        /* Bottom Navigation - Fixed properly */
+        .bottom-nav { background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0 12px; flex-shrink:0; position: relative; z-index: 10; margin-bottom: env(safe-area-inset-bottom, 0px); gap: 4px; flex-wrap: wrap; }
+        .nav-btn { background: none; border: none; font-size: 11px; color: var(--text-sec); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 10px; border-radius: 30px; transition: 0.1s; }
+        .nav-btn.active { color: var(--accent); font-weight: bold; background: var(--soft); }
+        .nav-btn i { font-size: 18px; }
+        
+        /* Ad Container */
+        .ad-container { width: 100%; text-align: center; background: var(--surface); border-top: 1px solid var(--border); padding: 4px 0; flex-shrink: 0; }
+        .ad-label { font-size: 10px; color: var(--text-sec); margin-bottom: 2px; }
+        
+        /* GDPR Consent */
+        .gdpr-consent { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 2px solid var(--accent); padding: 16px; z-index: 3000; display: none; flex-direction: column; gap: 12px; box-shadow: 0 -4px 20px rgba(0,0,0,0.2); }
+        
+        footer { text-align: center; font-size: 10px; padding: 6px; color: var(--text-sec); background: var(--surface); border-top: 1px solid var(--border); flex-shrink:0; }
+        .back-btn { background: var(--soft); border: none; padding: 6px 16px; border-radius: 40px; margin-bottom: 18px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+        .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+        button { background: var(--soft); border: none; padding: 8px 18px; border-radius: 40px; cursor: pointer; font-weight:500; transition: 0.2s; }
+        button.primary { background: var(--accent); color: white; }
+        button.success { background: var(--success); color: white; }
+        textarea, input { width:100%; border-radius:20px; border:1px solid var(--border); background:var(--card); padding:12px; font-family: monospace; margin:5px 0; }
+        iframe, video { width:100%; border-radius:24px; border:1px solid var(--border); background:white; }
+        .card-item { background: var(--card); padding: 14px; border-radius: 24px; margin: 12px 0; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .settings-group { background: var(--card); border-radius: 28px; padding: 18px; margin: 20px 0; }
+        .drag-builder { background: var(--soft); border-radius: 28px; padding: 12px; min-height: 120px; margin: 15px 0; display: flex; flex-wrap: wrap; gap: 12px; }
+        .drag-element { background: var(--accent); color: white; padding: 8px 16px; border-radius: 40px; cursor: grab; user-select: none; display: inline-block; }
+        .builder-canvas { background: var(--card); border: 2px dashed var(--border); border-radius: 24px; min-height: 160px; padding: 12px; margin-top: 12px; }
+        .user-badge { display: flex; align-items: center; gap: 8px; background: var(--soft); padding: 5px 12px; border-radius: 40px; }
+        .progress-bar { width: 100%; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { width: 0%; height: 100%; background: var(--accent); transition: width 0.3s; }
+        @media (max-width: 600px) { .nav-btn { padding: 4px 8px; font-size: 10px; } .nav-btn i { font-size: 16px; } .bottom-nav { gap: 2px; } }
+    </style>
+</head>
+<body>
+<div id="splash">
+    <div class="scene"><div class="cube"><div class="cube__face cube__face--front">MJH</div><div class="cube__face cube__face--back">MJH</div><div class="cube__face cube__face--right">STUDIO</div><div class="cube__face cube__face--left">STUDIO</div><div class="cube__face cube__face--top">3D</div><div class="cube__face cube__face--bottom">APP</div></div></div>
+    <div class="splash-title">MJH STUDIO</div>
+    <div class="splash-sub">Firebase • AdMob • Video Edit • Complete</div>
+    <div class="spinner"></div>
+</div>
 
-    let currentUser=null, projects={}, extensions={}, currentHtmlCode='<!DOCTYPE html><html><head><title>MJH</title></head><body><h1>Hello MJH Studio</h1></body></html>';
-    let blocklyWorkspace=null;
-    function saveAllData(){ if(currentUser) localStorage.setItem(`mjhs_${currentUser}_data`,JSON.stringify({projects,extensions,currentHtmlCode})); }
-    function loadAllData(){ if(currentUser){ let d=JSON.parse(localStorage.getItem(`mjhs_${currentUser}_data`)||'{}'); projects=d.projects||{}; extensions=d.extensions||{}; currentHtmlCode=d.currentHtmlCode||currentHtmlCode; document.getElementById('htmlCode').value=currentHtmlCode; refreshPreview(); renderProjects(); renderExtensions(); } }
-    function refreshPreview(){ let code=document.getElementById('htmlCode').value; document.getElementById('previewFrame').srcdoc=code; currentHtmlCode=code; saveAllData(); }
-    function saveHtmlProject(){ let n=prompt('Project name:'); if(n){ projects[n]={type:'html',content:currentHtmlCode}; saveAllData(); renderProjects(); } }
-    function initBlockly(){ if(blocklyWorkspace) blocklyWorkspace.dispose(); blocklyWorkspace=Blockly.inject('blocklyDiv',{toolbox:`<xml><block type="controls_if"></block><block type="text_print"></block><block type="text"></block></xml>`,grid:{spacing:20}}); }
-    function genBlocklyCode(){ if(blocklyWorkspace){ let code=Blockly.JavaScript.workspaceToCode(blocklyWorkspace); document.getElementById('generatedCode').value=code; alert('Code generated!'); } }
-    function saveBlocklyProj(){ if(blocklyWorkspace){ let xml=Blockly.Xml.workspaceToDom(blocklyWorkspace); let xmlText=Blockly.Xml.domToText(xml); let n=prompt('Blockly project name:'); if(n){ projects[n]={type:'blockly',content:xmlText}; saveAllData(); renderProjects(); } } }
-    function renderProjects(){ let c=document.getElementById('projectList'); if(!c) return; let h=''; for(let n in projects){ h+=`<div class="card-item"><span>${n}</span><div><button class="loadProj" data-name="${n}">Load</button><button class="delProj" data-name="${n}">Del</button></div></div>`; } c.innerHTML=h||'<p>No projects</p>'; document.querySelectorAll('.loadProj').forEach(b=>b.onclick=()=>{ let p=projects[b.dataset.name]; if(p.type==='html'){ currentHtmlCode=p.content; document.getElementById('htmlCode').value=currentHtmlCode; refreshPreview(); navigateTo('editor'); }else if(p.type==='blockly'&&blocklyWorkspace){ Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(p.content),blocklyWorkspace); navigateTo('blockly'); } alert(`Loaded ${b.dataset.name}`); }); document.querySelectorAll('.delProj').forEach(b=>b.onclick=()=>{ delete projects[b.dataset.name]; saveAllData(); renderProjects(); }); }
-    function renderExtensions(){ let c=document.getElementById('extensionList'); if(!c) return; let h=''; for(let n in extensions){ h+=`<div class="card-item"><span>${n}</span><div><button class="loadExt" data-name="${n}">Load</button><button class="delExt" data-name="${n}">Delete</button></div></div>`; } c.innerHTML=h||'<p>No extensions</p>'; document.querySelectorAll('.loadExt').forEach(b=>b.onclick=()=>{ let ext=extensions[b.dataset.name]; try{ let p=JSON.parse(ext.content); console.log(p); alert(`Extension ${b.dataset.name} loaded (check console)`); if(p.script) eval(p.script); }catch(e){ alert('Invalid JSON'); } }); document.querySelectorAll('.delExt').forEach(b=>b.onclick=()=>{ delete extensions[b.dataset.name]; saveAllData(); renderExtensions(); }); }
-    document.getElementById('newExtensionBtn')?.addEventListener('click',()=>{ document.getElementById('extensionEditor').style.display='block'; document.getElementById('extName').value=''; document.getElementById('extCode').value='{"name":"demo","script":"alert(\"Hello\")"}'; });
-    document.getElementById('saveExtensionBtn')?.addEventListener('click',()=>{ let n=document.getElementById('extName').value.trim(); let c=document.getElementById('extCode').value; if(n){ extensions[n]={content:c}; saveAllData(); renderExtensions(); document.getElementById('extensionEditor').style.display='none'; } });
-    document.getElementById('cancelExtBtn')?.addEventListener('click',()=>{ document.getElementById('extensionEditor').style.display='none'; });
-    document.getElementById('loadExtensionBtn')?.addEventListener('click',()=>{ extensions['Sample']={content:'{"name":"Sample","script":"alert(\"Sample loaded\")"}'}; saveAllData(); renderExtensions(); alert('Demo extension added'); });
-    let uploadedBlob=null;
-    document.getElementById('videoUpload')?.addEventListener('change',e=>{ let f=e.target.files[0]; if(f){ uploadedBlob=f; document.getElementById('videoPreview').src=URL.createObjectURL(f); } });
-    document.getElementById('downloadVideoBtn')?.addEventListener('click',()=>{ if(uploadedBlob){ let a=document.createElement('a'); a.href=URL.createObjectURL(uploadedBlob); a.download='mjh_video.mp4'; a.click(); }else alert('Upload video first'); });
-    function checkLogin(){ let u=localStorage.getItem('mjhs_user'); if(u){ currentUser=u; loadAllData(); document.getElementById('bottomNav').style.display='flex'; navigateTo('learn'); initBlockly(); }else{ document.getElementById('bottomNav').style.display='none'; navigateTo('login'); } }
-    function login(e,p){ if(e&&p){ localStorage.setItem('mjhs_user',e); currentUser=e; loadAllData(); document.getElementById('bottomNav').style.display='flex'; navigateTo('learn'); initBlockly(); }else alert('Enter email/password'); }
-    function signup(n,e,p){ if(n&&e&&p){ localStorage.setItem('mjhs_user',e); currentUser=e; loadAllData(); document.getElementById('bottomNav').style.display='flex'; navigateTo('learn'); initBlockly(); }else alert('Fill all'); }
-    document.getElementById('doLoginBtn')?.addEventListener('click',()=>login(document.getElementById('loginEmail').value,document.getElementById('loginPassword').value));
-    document.getElementById('doSignupBtn')?.addEventListener('click',()=>signup(document.getElementById('signupName').value,document.getElementById('signupEmail').value,document.getElementById('signupPassword').value));
+<!-- GDPR Banner -->
+<div id="gdprConsent" class="gdpr-consent">
+    <p><i class="fas fa-shield-alt"></i> We use cookies and ads to improve your experience. Do you accept?</p>
+    <div><button id="acceptAds" class="primary">Accept All</button><button id="declineAds">Decline</button></div>
+</div>
+
+<!-- Ad Banner -->
+<div id="adBanner" class="ad-container" style="display: none;">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px" data-ad-client="ca-pub-4876264020851039" data-ad-slot="6928763248"></ins>
+</div>
+
+<div class="main-app" id="mainApp">
+    <div class="app-header">
+        <div class="logo-studio">MJH</div>
+        <div class="action-icons"><i class="fas fa-share-alt" id="globalShareBtn"></i><i class="fas fa-cloud-upload-alt" id="cloudSaveBtn"></i><i class="fas fa-trash-alt" id="globalTrashBtn"></i><i class="fas fa-gift" id="rewardedAdBtn" style="color: gold;"></i></div>
+        <div style="display: flex; gap: 8px;">
+            <div id="userBadge" class="user-badge" style="display:none;"><i class="fas fa-user-circle"></i><span id="userName"></span><button id="logoutBtn" style="padding:2px 8px; font-size:11px;">Exit</button></div>
+            <button class="translate-btn" id="translateBtn"><i class="fas fa-language"></i></button>
+            <button class="dark-toggle" id="darkModeToggle"><i class="fas fa-moon"></i></button>
+        </div>
+    </div>
+
+    <div class="pages-container">
+        <!-- Learn Page -->
+        <div class="page" data-page="learn" id="pageLearn">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2><i class="fas fa-graduation-cap"></i> Learning Center</h2>
+            <div class="toolbar"><button class="primary" id="learnHtmlBtn">📝 HTML</button><button class="primary" id="learnBlocklyBtn">🧩 Blockly</button><button class="primary" id="learnExtBtn">🔌 Extensions</button><button class="primary" id="learnDragBtn">🖱️ Drag UI</button><button class="primary" id="learnVideoEditBtn">🎬 Video Edit</button></div>
+            <div id="tutorialContent" class="settings-group"><p>Select a topic to start learning</p></div>
+            <div id="livePracticeArea"><h3>✏️ Practice Zone</h3><textarea id="practiceCode" rows="5" placeholder="Write HTML/CSS/JS"></textarea><button id="runPracticeBtn" class="primary">Run</button><iframe id="practicePreview" style="height:200px; margin-top:10px;" srcdoc="<h3>Result</h3>"></iframe></div>
+        </div>
+        
+        <!-- Editor -->
+        <div class="page" data-page="editor" id="pageEditor"><button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button><h2>✏️ HTML Studio</h2><div class="toolbar"><button id="runPreviewBtn" class="primary">Run Preview</button><button id="saveHtmlProjectBtn">Save Project</button></div><textarea id="htmlCode" rows="10"></textarea><h3>Preview</h3><iframe id="previewFrame"></iframe></div>
+        
+        <!-- Blockly -->
+        <div class="page" data-page="blockly" id="pageBlockly"><button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button><h2>🧩 Blockly</h2><div id="blocklyDiv" style="height: 380px; background: var(--card); border-radius: 24px; margin:12px 0;"></div><div class="toolbar"><button id="genCodeBtn" class="primary">Generate Code</button><button id="saveBlocklyProjectBtn">Save Blockly</button></div><textarea id="generatedCode" rows="6"></textarea></div>
+        
+        <!-- Extensions -->
+        <div class="page" data-page="extensions" id="pageExtensions"><button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button><h2>🔌 Extensions Sandbox</h2><div class="toolbar"><button id="newExtensionBtn" class="primary">New Extension</button><button id="loadExtensionBtn">Load Demo</button></div><div id="extensionList"></div><div id="extensionEditor" style="display:none;"><input type="text" id="extName" placeholder="Extension Name"><textarea id="extCode" rows="5" placeholder='{"name":"myExt","script":"alert(\"sandbox\")"}'></textarea><button id="saveExtensionBtn">Save</button><button id="cancelExtBtn">Cancel</button></div></div>
+        
+        <!-- Video Studio with REAL ffmpeg editing -->
+        <div class="page" data-page="video" id="pageVideo">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2><i class="fas fa-video"></i> Video Studio (Real Editing)</h2>
+            <div class="settings-group">
+                <h3>1. Upload Video</h3>
+                <input type="file" id="videoUpload" accept="video/mp4,video/webm">
+                <video id="videoPreview" controls style="margin-top:12px; max-height:200px;"></video>
+            </div>
+            <div class="settings-group">
+                <h3>2. Edit Video (ffmpeg)</h3>
+                <div class="toolbar">
+                    <button id="loadFFmpegBtn" class="primary"><i class="fas fa-download"></i> Load FFmpeg</button>
+                    <button id="trimVideoBtn">✂️ Trim (0-5 sec)</button>
+                    <button id="cropVideoBtn">📐 Crop to 480p</button>
+                    <button id="compressVideoBtn">🗜️ Compress</button>
+                </div>
+                <div id="ffmpegStatus" style="font-size:12px; margin:8px 0;">FFmpeg not loaded. Click "Load FFmpeg" first.</div>
+                <div class="progress-bar"><div id="editProgress" class="progress-fill"></div></div>
+            </div>
+            <div class="settings-group">
+                <h3>3. Download Edited Video</h3>
+                <button id="downloadEditedVideoBtn" class="success">💾 Download Edited Video</button>
+            </div>
+        </div>
+        
+        <!-- Drag-Drop Builder -->
+        <div class="page" data-page="dragbuilder" id="pageDragBuilder"><button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button><h2><i class="fas fa-arrows-alt"></i> Drag-Drop UI Builder</h2><div class="drag-builder" id="draggableElements"><div class="drag-element" draggable="true" data-tag="<h2>Drag Heading</h2>">📌 Heading</div><div class="drag-element" draggable="true" data-tag="<p>Text paragraph here.</p>">📝 Paragraph</div><div class="drag-element" draggable="true" data-tag="<button onclick='alert(\"Hi\")'>Button</button>">🔘 Button</div><div class="drag-element" draggable="true" data-tag="<img src='https://picsum.photos/100/60'>">🖼️ Image</div></div><div class="builder-canvas" id="builderCanvas"><p>Drop elements here →</p></div><div class="toolbar"><button id="generateFromBuilder" class="primary">Generate HTML</button><button id="clearCanvas">Clear</button></div><textarea id="builderOutput" rows="5" placeholder="Generated code"></textarea><button id="useBuilderInEditor" class="primary">Use in Editor</button></div>
+        
+        <!-- Projects -->
+        <div class="page" data-page="projects" id="pageProjects"><button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button><h2>📁 My Projects (Firebase Cloud)</h2><div id="projectList"></div><div class="toolbar"><button id="exportBackupBtn">Export Backup</button><button id="importBackupBtn">Import Backup</button><button id="cloudSyncBtn" class="primary"><i class="fas fa-cloud-upload-alt"></i> Sync to Cloud</button></div><div class="settings-group"><h3>📱 APK Build Guide</h3><p><strong>Option 1 (Easy):</strong> Go to <a href="https://www.pwabuilder.com" target="_blank">PWA Builder</a> → Enter this URL → Download Android APK</p><p><strong>Option 2 (Professional):</strong> Use Capacitor: npm install -g @capacitor/cli → npx cap init → npx cap add android</p></div></div>
+        
+        <!-- Login -->
+        <div class="page" data-page="login" id="pageLogin"><div style="max-width:400px; margin:auto; padding-top:10%;"><div class="settings-group"><div id="loginForm"><h3>Login to MJH Studio</h3><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Password"><button id="doLoginBtn" class="primary">Login</button><p>No account? <button id="showSignupBtn" style="background:none; color:var(--accent);">Sign Up</button></p></div><div id="signupForm" style="display:none;"><h3>Create Account</h3><input type="text" id="signupName" placeholder="Full Name"><input type="email" id="signupEmail" placeholder="Email"><input type="password" id="signupPassword" placeholder="Password"><button id="doSignupBtn" class="primary">Sign Up</button><p>Already? <button id="showLoginBtn" style="background:none; color:var(--accent);">Login</button></p></div></div></div></div>
+    </div>
+
+    <div class="bottom-nav" id="bottomNav">
+        <button class="nav-btn" data-nav="learn"><i class="fas fa-graduation-cap"></i> Learn</button>
+        <button class="nav-btn" data-nav="editor"><i class="fas fa-code"></i> Editor</button>
+        <button class="nav-btn" data-nav="blockly"><i class="fas fa-puzzle-piece"></i> Blockly</button>
+        <button class="nav-btn" data-nav="extensions"><i class="fas fa-plug"></i> Ext</button>
+        <button class="nav-btn" data-nav="video"><i class="fas fa-video"></i> Video</button>
+        <button class="nav-btn" data-nav="dragbuilder"><i class="fas fa-hand-pointer"></i> Drag UI</button>
+        <button class="nav-btn" data-nav="projects"><i class="fas fa-folder"></i> Projects</button>
+    </div>
+    <footer>🔥 Firebase + AdMob + FFmpeg • MJH Studio Complete • Create & Code</footer>
+</div>
+
+<script>
+    // ========== FIREBASE CONFIG ==========
+    const firebaseConfig = {
+        apiKey: "AIzaSyAlA7MDWL2WKC3OH3kxMtkHZ8w5GpSt4y8",
+        authDomain: "mjh-studio.firebaseapp.com",
+        projectId: "mjh-studio",
+        storageBucket: "mjh-studio.firebasestorage.app",
+        messagingSenderId: "899252366841",
+        appId: "1:899252366841:web:5795ec41a51f2d0c4ba128",
+        measurementId: "G-7RHTQDWYVH"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    // ========== AD CONFIG ==========
+    let adsEnabled = false;
+    function enableAds() { adsEnabled = true; localStorage.setItem('gdpr_choice', 'accepted'); document.getElementById('gdprConsent').style.display = 'none'; document.getElementById('adBanner').style.display = 'block'; try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {} }
+    function declineAds() { adsEnabled = false; localStorage.setItem('gdpr_choice', 'declined'); document.getElementById('gdprConsent').style.display = 'none'; document.getElementById('adBanner').style.display = 'none'; }
+    function showInterstitial() { if(adsEnabled) console.log("Interstitial triggered"); }
+    function showRewarded() { if(!adsEnabled) { alert("Please accept ads to earn rewards!"); return; } alert("🎁 You earned 10 MJH Coins!"); localStorage.setItem('mjh_coins', (parseInt(localStorage.getItem('mjh_coins')||0)+10)); alert("Total coins: "+localStorage.getItem('mjh_coins')); }
+    
+    document.getElementById('acceptAds')?.addEventListener('click', enableAds);
+    document.getElementById('declineAds')?.addEventListener('click', declineAds);
+    document.getElementById('rewardedAdBtn')?.addEventListener('click', showRewarded);
+    if(localStorage.getItem('gdpr_choice') === 'accepted') enableAds();
+    else if(!localStorage.getItem('gdpr_choice')) document.getElementById('gdprConsent').style.display = 'flex';
+    
+    // ========== APP STATE ==========
+    let currentUser = null, projects = {}, extensions = {}, currentHtmlCode = '<!DOCTYPE html><html><head><title>MJH</title></head><body><h1>Welcome to MJH Studio</h1><p>Complete Creative Suite</p></body></html>';
+    let blocklyWorkspace = null;
+    
+    // FFmpeg Video Editing
+    let ffmpeg = null, currentVideoFile = null, editedVideoBlob = null;
+    const loadFFmpegBtn = document.getElementById('loadFFmpegBtn');
+    const ffmpegStatus = document.getElementById('ffmpegStatus');
+    const editProgress = document.getElementById('editProgress');
+    
+    async function loadFFmpeg() {
+        ffmpegStatus.innerText = "Loading FFmpeg (first time may take 30s)...";
+        editProgress.style.width = "30%";
+        try {
+            const { FFmpeg } = window.FFmpeg;
+            ffmpeg = new FFmpeg();
+            await ffmpeg.load();
+            ffmpegStatus.innerText = "✓ FFmpeg ready! You can now edit videos.";
+            editProgress.style.width = "100%";
+            setTimeout(()=> editProgress.style.width = "0%", 1000);
+        } catch(e) { ffmpegStatus.innerText = "FFmpeg load error: "+e.message; editProgress.style.width = "0%"; }
+    }
+    
+    async function processVideo(action, params) {
+        if(!ffmpeg) { alert("Please load FFmpeg first!"); return null; }
+        if(!currentVideoFile) { alert("Please upload a video first!"); return null; }
+        ffmpegStatus.innerText = `Processing: ${action}...`;
+        editProgress.style.width = "20%";
+        try {
+            const fileData = new Uint8Array(await currentVideoFile.arrayBuffer());
+            await ffmpeg.writeFile('input.mp4', fileData);
+            editProgress.style.width = "50%";
+            
+            if(action === 'trim') await ffmpeg.exec(['-i', 'input.mp4', '-t', '5', '-c', 'copy', 'output.mp4']);
+            else if(action === 'crop') await ffmpeg.exec(['-i', 'input.mp4', '-vf', 'scale=640:480', '-c:a', 'copy', 'output.mp4']);
+            else if(action === 'compress') await ffmpeg.exec(['-i', 'input.mp4', '-vf', 'scale=480:-2', '-b:v', '500k', 'output.mp4']);
+            
+            editProgress.style.width = "80%";
+            const data = await ffmpeg.readFile('output.mp4');
+            editedVideoBlob = new Blob([data.buffer], { type: 'video/mp4' });
+            const url = URL.createObjectURL(editedVideoBlob);
+            document.getElementById('videoPreview').src = url;
+            ffmpegStatus.innerText = `✓ ${action} complete! Download edited video.`;
+            editProgress.style.width = "100%";
+            setTimeout(()=> editProgress.style.width = "0%", 1000);
+            return editedVideoBlob;
+        } catch(e) { ffmpegStatus.innerText = `Error: ${e.message}`; editProgress.style.width = "0%"; return null; }
+    }
+    
+    loadFFmpegBtn?.addEventListener('click', loadFFmpeg);
+    document.getElementById('trimVideoBtn')?.addEventListener('click', ()=> processVideo('trim'));
+    document.getElementById('cropVideoBtn')?.addEventListener('click', ()=> processVideo('crop'));
+    document.getElementById('compressVideoBtn')?.addEventListener('click', ()=> processVideo('compress'));
+    document.getElementById('downloadEditedVideoBtn')?.addEventListener('click', ()=>{
+        if(editedVideoBlob) { let a = document.createElement('a'); a.href = URL.createObjectURL(editedVideoBlob); a.download = 'mjh_edited_video.mp4'; a.click(); }
+        else alert("No edited video. Process a video first.");
+    });
+    document.getElementById('videoUpload')?.addEventListener('change', e=>{ if(e.target.files[0]){ currentVideoFile = e.target.files[0]; document.getElementById('videoPreview').src = URL.createObjectURL(currentVideoFile); editedVideoBlob = null; } });
+    
+    // ========== SYNC FUNCTIONS ==========
+    async function syncToCloud() { if(!currentUser) { alert("Login first"); return; } try { await db.collection("users").doc(currentUser.uid).set({ email: currentUser.email, displayName: currentUser.displayName, projects, extensions, currentHtmlCode, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }); alert("✅ Synced!"); } catch(e){ alert(e.message); } }
+    async function loadFromCloud(user) { if(!user) return; try { let doc = await db.collection("users").doc(user.uid).get(); if(doc.exists){ let d=doc.data(); projects=d.projects||{}; extensions=d.extensions||{}; currentHtmlCode=d.currentHtmlCode||currentHtmlCode; document.getElementById('htmlCode').value=currentHtmlCode; refreshPreview(); renderProjects(); renderExtensions(); } } catch(e){} }
+    
+    function refreshPreview() { let code = document.getElementById('htmlCode').value; document.getElementById('previewFrame').srcdoc = code; currentHtmlCode = code; }
+    function renderProjects() { let cont = document.getElementById('projectList'); if(!cont) return; let h=''; for(let n in projects) h+=`<div class="card-item"><span>${n}</span><div><button class="loadProj" data-name="${n}">Load</button><button class="delProj" data-name="${n}">Del</button></div></div>`; cont.innerHTML = h||'<p>No projects</p>';
+        document.querySelectorAll('.loadProj').forEach(b=>b.onclick=()=>{ let p=projects[b.dataset.name]; if(p.type==='html'){ currentHtmlCode=p.content; document.getElementById('htmlCode').value=currentHtmlCode; refreshPreview(); navigateTo('editor'); } else if(p.type==='blockly' && blocklyWorkspace){ Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(p.content), blocklyWorkspace); navigateTo('blockly'); } showInterstitial(); });
+        document.querySelectorAll('.delProj').forEach(b=>b.onclick=()=>{ delete projects[b.dataset.name]; renderProjects(); syncToCloud(); });
+    }
+    function renderExtensions() { let cont = document.getElementById('extensionList'); if(!cont) return; let h=''; for(let n in extensions) h+=`<div class="card-item"><span>${n}</span><div><button class="loadExt" data-name="${n}">Run</button><button class="delExt" data-name="${n}">Del</button></div></div>`; cont.innerHTML = h||'<p>No extensions</p>';
+        document.querySelectorAll('.loadExt').forEach(b=>b.onclick=()=>{ try{ let obj=JSON.parse(extensions[b.dataset.name].content); if(obj.script) eval(obj.script); alert(`Executed ${b.dataset.name}`); }catch(e){ alert('Sandbox error: '+e.message); } });
+        document.querySelectorAll('.delExt').forEach(b=>b.onclick=()=>{ delete extensions[b.dataset.name]; renderExtensions(); syncToCloud(); });
+    }
+    function initBlockly() { if(blocklyWorkspace) blocklyWorkspace.dispose(); blocklyWorkspace = Blockly.inject('blocklyDiv', { toolbox: `<xml><block type="controls_if"></block><block type="text_print"></block><block type="text"></block></xml>`, grid:{spacing:20} }); }
+    
+    // ========== AUTH ==========
+    auth.onAuthStateChanged(async (user) => {
+        if(user) { currentUser=user; document.getElementById('bottomNav').style.display='flex'; document.getElementById('userBadge').style.display='flex'; document.getElementById('userName').innerText = user.displayName || user.email.split('@')[0]; await loadFromCloud(user); navigateTo('learn'); initBlockly(); }
+        else { currentUser=null; document.getElementById('bottomNav').style.display='flex'; document.getElementById('userBadge').style.display='none'; navigateTo('login'); }
+    });
+    document.getElementById('doLoginBtn')?.addEventListener('click', async ()=>{ try{ await auth.signInWithEmailAndPassword(document.getElementById('loginEmail').value, document.getElementById('loginPassword').value); showInterstitial(); } catch(e){ alert(e.message); } });
+    document.getElementById('doSignupBtn')?.addEventListener('click', async ()=>{ try{ let cred = await auth.createUserWithEmailAndPassword(document.getElementById('signupEmail').value, document.getElementById('signupPassword').value); await cred.user.updateProfile({ displayName: document.getElementById('signupName').value }); alert("Account created!"); } catch(e){ alert(e.message); } });
     document.getElementById('showSignupBtn')?.addEventListener('click',()=>{ document.getElementById('loginForm').style.display='none'; document.getElementById('signupForm').style.display='block'; });
     document.getElementById('showLoginBtn')?.addEventListener('click',()=>{ document.getElementById('signupForm').style.display='none'; document.getElementById('loginForm').style.display='block'; });
-    document.getElementById('resetPasswordBtn')?.addEventListener('click',()=>{ let em=prompt('Email for reset demo'); if(em) alert(`Reset link sent to ${em} (simulated)`); });
-    document.getElementById('exportBackupBtn')?.addEventListener('click',()=>{ let data={projects,extensions,currentHtmlCode}; let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'})); a.download=`mjhs_backup_${currentUser}.json`; a.click(); });
-    document.getElementById('importBackupBtn')?.addEventListener('click',()=>{ let inp=document.createElement('input'); inp.type='file'; inp.accept='application/json'; inp.onchange=e=>{ let f=e.target.files[0]; let r=new FileReader(); r.onload=ev=>{ let d=JSON.parse(ev.target.result); projects=d.projects||{}; extensions=d.extensions||{}; currentHtmlCode=d.currentHtmlCode||currentHtmlCode; saveAllData(); renderProjects(); renderExtensions(); document.getElementById('htmlCode').value=currentHtmlCode; refreshPreview(); alert('Restored'); }; r.readAsText(f); }; inp.click(); });
-    document.getElementById('globalShareBtn')?.addEventListener('click',()=>{ if(navigator.share) navigator.share({title:'MJH Studio'}); else alert('Copy link: '+location.href); });
-    document.getElementById('autoBtn')?.addEventListener('click',()=>alert('Auto feature coming soon'));
-    document.getElementById('globalEditBtn')?.addEventListener('click',()=>navigateTo('editor'));
-    document.getElementById('globalTrashBtn')?.addEventListener('click',()=>{ if(confirm('Delete all projects & extensions?')){ projects={}; extensions={}; saveAllData(); renderProjects(); renderExtensions(); alert('Cleared'); } });
+    document.getElementById('logoutBtn')?.addEventListener('click', async ()=>{ await auth.signOut(); alert("Logged out"); });
+    
+    // ========== EVENT LISTENERS ==========
+    document.getElementById('runPreviewBtn')?.addEventListener('click', refreshPreview);
+    document.getElementById('saveHtmlProjectBtn')?.addEventListener('click', ()=>{ let n=prompt('Project name'); if(n){ projects[n]={type:'html',content:currentHtmlCode}; renderProjects(); syncToCloud(); showInterstitial(); } });
+    document.getElementById('genCodeBtn')?.addEventListener('click', ()=>{ if(blocklyWorkspace){ let code=Blockly.JavaScript.workspaceToCode(blocklyWorkspace); document.getElementById('generatedCode').value=code; alert('Code generated'); showInterstitial(); } });
+    document.getElementById('saveBlocklyProjectBtn')?.addEventListener('click', ()=>{ if(blocklyWorkspace){ let xml=Blockly.Xml.workspaceToDom(blocklyWorkspace); let xmlText=Blockly.Xml.domToText(xml); let n=prompt('Blockly project name'); if(n){ projects[n]={type:'blockly',content:xmlText}; renderProjects(); syncToCloud(); showInterstitial(); } } });
+    document.getElementById('newExtensionBtn')?.addEventListener('click',()=>{ document.getElementById('extensionEditor').style.display='block'; document.getElementById('extCode').value='{"name":"demo","script":"alert(\'Hello\')"}'; });
+    document.getElementById('saveExtensionBtn')?.addEventListener('click',()=>{ let n=document.getElementById('extName').value.trim(); let c=document.getElementById('extCode').value; if(n){ extensions[n]={content:c}; renderExtensions(); document.getElementById('extensionEditor').style.display='none'; syncToCloud(); } });
+    document.getElementById('cancelExtBtn')?.addEventListener('click',()=>document.getElementById('extensionEditor').style.display='none');
+    document.getElementById('loadExtensionBtn')?.addEventListener('click',()=>{ extensions['Sample']={content:'{"name":"Sample","script":"alert(\"Sample loaded\")"}'}; renderExtensions(); syncToCloud(); });
+    document.getElementById('cloudSyncBtn')?.addEventListener('click', syncToCloud);
+    document.getElementById('cloudSaveBtn')?.addEventListener('click', syncToCloud);
+    document.getElementById('exportBackupBtn')?.addEventListener('click',()=>{ let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify({projects,extensions,currentHtmlCode})],{type:'application/json'})); a.download=`mjh_backup.json`; a.click(); });
+    document.getElementById('importBackupBtn')?.addEventListener('click',()=>{ let inp=document.createElement('input'); inp.type='file'; inp.accept='application/json'; inp.onchange=e=>{ let f=e.target.files[0]; let r=new FileReader(); r.onload=ev=>{ let d=JSON.parse(ev.target.result); projects=d.projects||{}; extensions=d.extensions||{}; currentHtmlCode=d.currentHtmlCode||currentHtmlCode; document.getElementById('htmlCode').value=currentHtmlCode; refreshPreview(); renderProjects(); renderExtensions(); syncToCloud(); alert('Restored'); }; r.readAsText(f); }; inp.click(); });
+    document.getElementById('globalShareBtn')?.addEventListener('click',()=>{ if(navigator.share) navigator.share({title:'MJH Studio'}); else alert('Share this PWA!'); });
+    document.getElementById('globalTrashBtn')?.addEventListener('click',()=>{ if(confirm('Delete ALL?')){ projects={}; extensions={}; renderProjects(); renderExtensions(); syncToCloud(); alert('Cleared'); } });
     document.getElementById('darkModeToggle')?.addEventListener('click',()=>{ document.body.classList.toggle('dark'); localStorage.setItem('mjhs_dark',document.body.classList.contains('dark')?'enabled':'disabled'); });
     if(localStorage.getItem('mjhs_dark')==='enabled') document.body.classList.add('dark');
-    document.getElementById('translateBtn')?.addEventListener('click',()=>{ let s=document.createElement('script'); s.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'; document.body.appendChild(s); window.googleTranslateElementInit=function(){ new google.translate.TranslateElement({pageLanguage:'en'},'translateBtn'); }; alert('Translate widget added'); });
-    document.getElementById('runPreviewBtn')?.addEventListener('click',refreshPreview);
-    document.getElementById('saveHtmlProjectBtn')?.addEventListener('click',saveHtmlProject);
-    document.getElementById('genCodeBtn')?.addEventListener('click',genBlocklyCode);
-    document.getElementById('saveBlocklyProjectBtn')?.addEventListener('click',saveBlocklyProj);
-    function navigateTo(p){ document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active')); let t=document.getElementById(`page${p.charAt(0).toUpperCase()+p.slice(1)}`); if(t) t.classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b=>{ if(b.dataset.nav===p) b.classList.add('active'); else b.classList.remove('active'); }); }
-    window.navigateTo=navigateTo;
-    document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>navigateTo(b.dataset.nav));
-
-    const tutorialDiv=document.getElementById('tutorialContent');
-    function showTutorial(title, steps, diagram, finalCode){
-        let html=`<h3>${title}</h3><div class="diagram">${diagram}</div>`;
-        steps.forEach((step,i)=>{ html+=`<div class="tutorial-step"><strong>Step ${i+1}:</strong> ${step}</div>`; });
-        html+=`<div class="toolbar"><button id="applyFinalCodeBtn" class="primary">✨ Try Complete Example</button></div><p>After learning, use the Practice Zone above to create your own!</p>`;
-        tutorialDiv.innerHTML=html;
-        document.getElementById('applyFinalCodeBtn')?.addEventListener('click',()=>{ document.getElementById('practiceCode').value=finalCode; document.getElementById('runPracticeBtn').click(); });
-    }
-    document.getElementById('learnHtmlBtn')?.addEventListener('click',()=>{ showTutorial('HTML Basics',['Step 1: HTML structure (DOCTYPE, html, head, body)','Step 2: Add headings, paragraphs','Step 3: Insert images & links','Step 4: Style with inline CSS','Step 5: Add JavaScript events'],'┌─────────────────┐\n│  &lt;html&gt;       │\n│  ┌───────────┐  │\n│  │ &lt;body&gt;   │  │\n│  │  Hello    │  │\n│  │ &lt;/body&gt;  │  │\n│  └───────────┘  │\n│  &lt;/html&gt;       │\n└─────────────────┘','<!DOCTYPE html>\n<html>\n<head><title>My Page</title></head>\n<body>\n<h1>Hello MJH Studio</h1>\n<p>This is my first web page.</p>\n<button onclick="alert(\'You learned HTML!\')">Click me</button>\n</body>\n</html>'); });
-    document.getElementById('learnBlocklyBtn')?.addEventListener('click',()=>{ showTutorial('Blockly Programming',['Step 1: Drag blocks from toolbox','Step 2: Connect "print" and "text"','Step 3: Add math/number blocks','Step 4: Generate JavaScript code','Step 5: Use that code in HTML editor'],'┌──────────────┐    ┌──────────┐\n│  print "Hi"  │ -> │  alert() │\n└──────────────┘    └──────────┘\n       |                 |\n    ┌──▼─────────────────▼──┐\n    │   JavaScript Code     │\n    └───────────────────────┘','// Generated Blockly code:\nconsole.log("Hello from Blockly");\nalert("You built this with blocks!");'); });
-    document.getElementById('learnExtBtn')?.addEventListener('click',()=>{ showTutorial('Creating Extensions',['Step 1: Write JSON with "script" field','Step 2: Add custom blocks or functions','Step 3: Save extension','Step 4: Load it to run code','Step 5: Modify existing app behavior'],'┌────────────────┐\n│ { "script":     │\n│   "alert(1)" }  │\n└───────┬────────┘\n        ▼\n┌───────────────┐\n│ Extension runs│\n│ in app safely │\n└───────────────┘','{"name":"MyPlugin","script":"alert(\'Extension loaded! You can now add new blocks.\')","blocks":[]}'); });
-    document.getElementById('learnVideoBtn')?.addEventListener('click',()=>{ showTutorial('Video Editing',['Step 1: Upload a video file','Step 2: Preview it','Step 3: Use trim sliders (simulated)','Step 4: Download edited version','Step 5: Combine with HTML/Blockly projects'],'┌────────┐   ┌──────────┐   ┌──────────┐\n│ Upload │ → │ Preview │ → │ Download│\n└────────┘   └──────────┘   └──────────┘','Video editing demo: Use the Video Studio tab to upload, trim (simulated) and download your creations.'); });
+    document.getElementById('translateBtn')?.addEventListener('click',()=>{ let s=document.createElement('script'); s.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'; document.body.appendChild(s); window.googleTranslateElementInit=function(){ new google.translate.TranslateElement({pageLanguage:'en'},'translateBtn'); }; });
     document.getElementById('runPracticeBtn')?.addEventListener('click',()=>{ let code=document.getElementById('practiceCode').value; document.getElementById('practicePreview').srcdoc=code; });
-    document.getElementById('practiceCode').value='<h1>Try HTML here!</h1><p>Edit and click Run.</p>';
+    document.getElementById('practiceCode').value = '<h2>Practice Zone</h2><button onclick="alert(\'You did it!\')">Click Me</button>';
+    
+    // Drag-Drop
+    document.querySelectorAll('.drag-element').forEach(el=>{ el.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', el.getAttribute('data-tag')); }); });
+    const canvas = document.getElementById('builderCanvas');
+    canvas.addEventListener('dragover', e=>e.preventDefault());
+    canvas.addEventListener('drop', e=>{ e.preventDefault(); let htmlTag = e.dataTransfer.getData('text/plain'); let div = document.createElement('div'); div.innerHTML = htmlTag; canvas.appendChild(div); });
+    document.getElementById('generateFromBuilder')?.addEventListener('click',()=>{ let result = ''; Array.from(canvas.children).forEach(child=>{ if(child.innerHTML && child.tagName!='P') result += child.outerHTML; }); let full = `<!DOCTYPE html><html><body>${result}</body></html>`; document.getElementById('builderOutput').value = full; });
+    document.getElementById('clearCanvas')?.addEventListener('click',()=>{ canvas.innerHTML = '<p>Drop elements here →</p>'; });
+    document.getElementById('useBuilderInEditor')?.addEventListener('click',()=>{ let code = document.getElementById('builderOutput').value; if(code){ document.getElementById('htmlCode').value = code; refreshPreview(); navigateTo('editor'); } });
+    
+    function navigateTo(p){ document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active')); let target = document.getElementById(`page${p.charAt(0).toUpperCase()+p.slice(1)}`); if(target) target.classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b=>{ if(b.dataset.nav===p) b.classList.add('active'); else b.classList.remove('active'); }); if(Math.random()<0.2) showInterstitial(); }
+    window.navigateTo = navigateTo;
+    document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>navigateTo(b.dataset.nav));
+    
+    // Tutorials
+    const tutorialDiv = document.getElementById('tutorialContent');
+    function showTutorial(title, steps, diagram, finalCode){ let html=`<h3>${title}</h3><div class="diagram">${diagram}</div>`; steps.forEach(s=>html+=`<div class="tutorial-step"><strong>📘</strong> ${s}</div>`); html+=`<button id="applyFinalCodeBtn" class="primary">✨ Try Example</button>`; tutorialDiv.innerHTML=html; document.getElementById('applyFinalCodeBtn')?.addEventListener('click',()=>{ document.getElementById('practiceCode').value=finalCode; document.getElementById('runPracticeBtn').click(); }); }
+    document.getElementById('learnHtmlBtn')?.addEventListener('click',()=>showTutorial('HTML Basics',['Structure: html,head,body','Tags: h1, button','Live preview'],'┌─┐\n│HTML│\n└─┘','<h1>Hello MJH</h1><button onclick="alert(\'Learned\')">Click</button>'));
+    document.getElementById('learnBlocklyBtn')?.addEventListener('click',()=>showTutorial('Blockly',['Drag blocks','Connect','Generate JS'],'[Blockly]','console.log("Blockly is fun");'));
+    document.getElementById('learnExtBtn')?.addEventListener('click',()=>showTutorial('Extensions',['JSON with script','Load and run'],'{"script":"alert()"}','{"name":"demo","script":"alert(\"Hello\")"}'));
+    document.getElementById('learnDragBtn')?.addEventListener('click',()=>showTutorial('Drag & Drop',['Drag elements','Drop on canvas','Generate HTML'],'[Drag]','<div>Drag UI builder active</div>'));
+    document.getElementById('learnVideoEditBtn')?.addEventListener('click',()=>showTutorial('Video Editing (FFmpeg)',['Upload video','Load FFmpeg (first time takes 30s)','Trim/crop/compress','Download edited video'],'🎬 Real video editing with ffmpeg.wasm','Upload a video and try editing!'));
+    
+    // Remove splash
+    setTimeout(()=>{ document.getElementById('splash').style.opacity='0'; setTimeout(()=>{ document.getElementById('splash').style.display='none'; document.getElementById('mainApp').style.display='flex'; },500); },2500);
 </script>
 </body>
 </html>
