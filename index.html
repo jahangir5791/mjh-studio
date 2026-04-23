@@ -7,9 +7,23 @@
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <script src="https://unpkg.com/blockly/blocks.js"></script>
     <script src="https://unpkg.com/blockly/javascript.js"></script>
-<link rel="manifest" href="manifest.json">
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="/mjh-studio/manifest.json">
+
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
+
+<!-- Service Worker -->
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/mjh-studio/sw.js")
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.log("SW Error:", err));
+}
+</script>
+
+<style>
         * { margin: 0; padding: 0; box-sizing: border-box; transition: background 0.2s, color 0.2s; }
         :root { --bg: #f4f7fc; --surface: #ffffff; --card: #ffffff; --text: #0a2540; --text-sec: #2c5a7a; --border: #dce5ef; --accent: #1f6e8c; --soft: #e0f0f5; }
         body.dark { --bg: #121826; --surface: #1e293b; --card: #1e2a3a; --text: #eef2ff; --text-sec: #b9c8e6; --border: #2d3a4b; --accent: #3b9bcb; --soft: #1f3e4c; }
