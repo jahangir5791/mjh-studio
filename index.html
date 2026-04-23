@@ -11,15 +11,21 @@
 <!-- PWA Manifest -->
 <link rel="manifest" href="/mjh-studio/manifest.json">
 
+<meta name="theme-color" content="#0d6efd">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <!-- Service Worker -->
 <script>
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/mjh-studio/sw.js")
-    .then(() => console.log("Service Worker Registered"))
-    .catch(err => console.log("SW Error:", err));
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/mjh-studio/sw.js")
+      .then(() => console.log("Service Worker Registered"))
+      .catch(err => console.log("SW Error:", err));
+  });
 }
 </script>
 
