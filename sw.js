@@ -10,7 +10,6 @@ const urlsToCache = [
   '/mjh-studio/icons/icon-152.png',
   '/mjh-studio/icons/icon-192.png',
   '/mjh-studio/icons/icon-256.png',
-  '/mjh-studio/icons/icon-384.png',
   '/mjh-studio/icons/icon-512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css',
   'https://unpkg.com/blockly/blockly.min.js',
