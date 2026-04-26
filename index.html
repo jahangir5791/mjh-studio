@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>MJH Studio - Complete Creative Suite</title>
     
-    <!-- PWA Manifest - CORRECTED: external file link -->
+    <!-- PWA Manifest - external file link -->
     <link rel="manifest" href="/mjh-studio/manifest.json">
     <meta name="theme-color" content="#0d6efd">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,7 +19,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     
-    <!-- ffmpeg.wasm for REAL video editing -->
+    <!-- ffmpeg.wasm -->
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/ffmpeg.min.js"></script>
     
     <!-- Blockly -->
@@ -61,7 +61,7 @@
         .page { position: absolute; top:0; left:0; width:100%; height:100%; overflow-y: auto; padding: 18px; opacity:0; visibility:hidden; transition: opacity 0.2s; padding-bottom: 80px; }
         .page.active { opacity:1; visibility:visible; }
         
-        /* Bottom Navigation - Fixed properly */
+        /* Bottom Navigation */
         .bottom-nav { background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0 12px; flex-shrink:0; position: relative; z-index: 10; margin-bottom: env(safe-area-inset-bottom, 0px); gap: 4px; flex-wrap: wrap; }
         .nav-btn { background: none; border: none; font-size: 11px; color: var(--text-sec); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 10px; border-radius: 30px; transition: 0.1s; }
         .nav-btn.active { color: var(--accent); font-weight: bold; background: var(--soft); }
@@ -143,7 +143,7 @@
         <!-- Extensions -->
         <div class="page" data-page="extensions" id="pageExtensions"><button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button><h2>🔌 Extensions Sandbox</h2><div class="toolbar"><button id="newExtensionBtn" class="primary">New Extension</button><button id="loadExtensionBtn">Load Demo</button></div><div id="extensionList"></div><div id="extensionEditor" style="display:none;"><input type="text" id="extName" placeholder="Extension Name"><textarea id="extCode" rows="5" placeholder='{"name":"myExt","script":"alert(\"sandbox\")"}'></textarea><button id="saveExtensionBtn">Save</button><button id="cancelExtBtn">Cancel</button></div></div>
         
-        <!-- Video Studio with REAL ffmpeg editing -->
+        <!-- Video Studio -->
         <div class="page" data-page="video" id="pageVideo">
             <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2><i class="fas fa-video"></i> Video Studio (Real Editing)</h2>
@@ -348,7 +348,7 @@
     document.getElementById('learnDragBtn')?.addEventListener('click',()=>showTutorial('Drag & Drop',['Drag elements','Drop on canvas','Generate HTML'],'[Drag]','<div>Drag UI builder active</div>'));
     document.getElementById('learnVideoEditBtn')?.addEventListener('click',()=>showTutorial('Video Editing (FFmpeg)',['Upload video','Load FFmpeg (first time takes 30s)','Trim/crop/compress','Download edited video'],'🎬 Real video editing with ffmpeg.wasm','Upload a video and try editing!'));
     
-    // ========== SERVICE WORKER REGISTRATION (NEW ADDED) ==========
+    // ========== SERVICE WORKER REGISTRATION ==========
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/mjh-studio/sw.js')
             .then(reg => console.log('✅ SW registered:', reg))
