@@ -7,11 +7,12 @@
     <meta name="description" content="MJH Studio - Professional Creative Suite with HTML Editor, Blockly, Advanced Video Editing & Drag & Drop Builder">
     <title>MJH Studio - Complete Creative Suite</title>
    
-    <!-- PWA Manifest (external, optional) -->
-    <link rel="manifest" href="/mjh-studio/manifest.json">
-    <meta name="theme-color" content="#0d6efd">
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e6f5c">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
    
     <!-- Google AdMob -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4876264020851039" crossorigin="anonymous"></script>
@@ -22,7 +23,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
    
-    <!-- FFmpeg.wasm for video editing -->
+    <!-- FFmpeg.wasm -->
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/umd/ffmpeg.min.js"></script>
    
     <!-- Blockly -->
@@ -47,7 +48,7 @@
         }
         body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100dvh; }
        
-        /* Splash Screen - stylish 3D cube effect */
+        /* Splash Screen */
         #splash {
             position: fixed; inset: 0; background: linear-gradient(135deg, #0f172a, #1e293b);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -58,7 +59,7 @@
         .cube-face {
             position: absolute; width: 140px; height: 140px; background: linear-gradient(135deg,#1e6f5c,#289672);
             border: 2px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 32px; color: white; border-radius: 20px; backface-visibility: visible;
+            font-weight: 800; font-size: 32px; color: white; border-radius: 20px;
         }
         .cube-face--front { transform: rotateY(0deg) translateZ(70px); }
         .cube-face--back { transform: rotateY(180deg) translateZ(70px); }
@@ -87,7 +88,6 @@
         }
         .page.active { opacity: 1; visibility: visible; }
        
-        /* Bottom Navigation */
         .bottom-nav {
             background: var(--surface); border-top: 1px solid var(--border);
             display: flex; justify-content: space-around; padding: 6px 0 12px; flex-shrink: 0;
@@ -96,23 +96,20 @@
         .nav-btn {
             background: none; border: none; font-size: 11px; color: var(--text-sec);
             display: flex; flex-direction: column; align-items: center; gap: 4px;
-            padding: 6px 12px; border-radius: 30px; cursor: pointer; transition: 0.1s;
+            padding: 6px 12px; border-radius: 30px; cursor: pointer;
         }
         .nav-btn.active { color: var(--accent); background: var(--soft); font-weight: bold; }
         .nav-btn i { font-size: 18px; }
        
-        /* Ad container */
         .ad-container { width: 100%; text-align: center; background: var(--surface); border-top: 1px solid var(--border); padding: 4px 0; flex-shrink: 0; }
         .ad-label { font-size: 10px; color: var(--text-sec); }
        
-        /* GDPR */
         .gdpr-consent {
             position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface);
             border-top: 3px solid var(--accent); padding: 18px; z-index: 4000;
             display: none; flex-direction: column; gap: 12px; box-shadow: 0 -4px 25px rgba(0,0,0,0.3);
         }
        
-        /* UI elements */
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 18px; margin-bottom: 18px; }
         button { padding: 8px 20px; border: none; border-radius: 40px; font-weight: 500; cursor: pointer; background: var(--soft); transition: 0.2s; }
         button.primary { background: var(--accent); color: white; }
@@ -128,6 +125,7 @@
         .user-badge { display: flex; align-items: center; gap: 8px; background: var(--soft); padding: 5px 14px; border-radius: 40px; }
         footer { text-align: center; font-size: 10px; padding: 6px; color: var(--text-sec); background: var(--surface); border-top: 1px solid var(--border); flex-shrink:0; }
         @media (max-width: 600px) { .nav-btn { padding: 4px 8px; font-size: 10px; } .nav-btn i { font-size: 16px; } }
+        .back-btn { background: var(--soft); border: none; padding: 6px 16px; border-radius: 40px; margin-bottom: 12px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -181,7 +179,7 @@
 
         <!-- HTML Editor -->
         <div class="page" id="pageEditor">
-            <button class="back-btn" onclick="navigateTo('home')" style="margin-bottom:12px;"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2>✏️ HTML Studio</h2>
             <div class="toolbar"><button id="runPreviewBtn" class="primary">Run Preview</button><button id="saveHtmlProjectBtn">Save Project</button></div>
             <textarea id="htmlCode" rows="12"></textarea>
@@ -191,16 +189,16 @@
 
         <!-- Blockly Page -->
         <div class="page" id="pageBlockly">
-            <button onclick="navigateTo('home')" style="margin-bottom:12px;"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2>🧩 Blockly Visual Coding</h2>
             <div id="blocklyDiv" style="height: 360px; background: var(--card); border-radius: 24px; margin:12px 0;"></div>
             <div class="toolbar"><button id="genCodeBtn" class="primary">Generate Code</button><button id="saveBlocklyProjectBtn">Save Blockly</button></div>
             <textarea id="generatedCode" rows="5" placeholder="Generated JavaScript will appear here..."></textarea>
         </div>
 
-        <!-- Video Studio with FFmpeg -->
+        <!-- Video Studio -->
         <div class="page" id="pageVideo">
-            <button onclick="navigateTo('home')" style="margin-bottom:12px;"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2><i class="fas fa-video"></i> Advanced Video Editor</h2>
             <div class="card"><input type="file" id="videoUpload" accept="video/mp4,video/webm"><video id="videoPreview" controls style="margin-top:12px; max-height:220px;"></video></div>
             <div class="card">
@@ -220,7 +218,7 @@
 
         <!-- Drag & Drop Builder -->
         <div class="page" id="pageDragBuilder">
-            <button onclick="navigateTo('home')" style="margin-bottom:12px;"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2><i class="fas fa-arrows-alt"></i> Drag & Drop UI Builder</h2>
             <div class="drag-builder" id="draggableElements">
                 <div class="drag-element" draggable="true" data-tag="<h2>Drag Heading</h2>">📌 Heading</div>
@@ -236,14 +234,14 @@
 
         <!-- Projects & Cloud -->
         <div class="page" id="pageProjects">
-            <button onclick="navigateTo('home')" style="margin-bottom:12px;"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2>📁 Cloud Projects</h2>
             <div id="projectList" class="card"></div>
             <div class="toolbar"><button id="cloudSyncBtn" class="primary"><i class="fas fa-cloud-upload-alt"></i> Sync to Cloud</button><button id="exportBackupBtn">Export Backup</button></div>
             <div class="card"><h4>📱 PWA / APK Info</h4><p>Use <a href="https://www.pwabuilder.com" target="_blank">PWA Builder</a> to convert this web app to Android APK easily.</p></div>
         </div>
        
-        <!-- Login Page (simple) -->
+        <!-- Login Page -->
         <div class="page" id="pageLogin">
             <div style="max-width:400px; margin:auto; padding-top:20px;"><div class="card">
                 <div id="loginForm"><h3>Login to MJH Studio</h3><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Password"><button id="doLoginBtn" class="primary">Login</button><p>New? <button id="showSignupBtn" style="background:none; color:var(--accent);">Sign Up</button></p></div>
@@ -337,7 +335,7 @@
         } catch(e) { ffmpegStatus.innerText = "Edit failed: "+e.message; editProgress.style.width = "0%"; }
     }
    
-    // Initialize event listeners for video
+    // Video event listeners
     document.getElementById('loadFFmpegBtn')?.addEventListener('click', loadFFmpeg);
     document.getElementById('trimVideoBtn')?.addEventListener('click', () => runVideoEdit('trim'));
     document.getElementById('cropVideoBtn')?.addEventListener('click', () => runVideoEdit('crop'));
@@ -349,7 +347,7 @@
     });
     document.getElementById('videoUpload')?.addEventListener('change', e => { if(e.target.files[0]) { currentVideoFile = e.target.files[0]; document.getElementById('videoPreview').src = URL.createObjectURL(currentVideoFile); editedVideoBlob = null; } });
    
-    // Helper functions for projects rendering
+    // Projects rendering
     function renderProjects() {
         const container = document.getElementById('projectList');
         if(!container) return;
@@ -409,8 +407,10 @@
     // Drag & Drop Builder
     document.querySelectorAll('.drag-element').forEach(el => { el.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', el.getAttribute('data-tag')); }); });
     const canvasDiv = document.getElementById('builderCanvas');
-    canvasDiv.addEventListener('dragover', e => e.preventDefault());
-    canvasDiv.addEventListener('drop', e => { e.preventDefault(); let tag = e.dataTransfer.getData('text/plain'); let wrapper = document.createElement('div'); wrapper.innerHTML = tag; canvasDiv.appendChild(wrapper.firstChild); });
+    if(canvasDiv) {
+        canvasDiv.addEventListener('dragover', e => e.preventDefault());
+        canvasDiv.addEventListener('drop', e => { e.preventDefault(); let tag = e.dataTransfer.getData('text/plain'); let wrapper = document.createElement('div'); wrapper.innerHTML = tag; canvasDiv.appendChild(wrapper.firstChild); });
+    }
     document.getElementById('generateFromBuilder')?.addEventListener('click', () => { let result = ''; Array.from(canvasDiv.children).forEach(child => { if(child.innerHTML && child.tagName !== 'P') result += child.outerHTML; }); let full = `<!DOCTYPE html><html><body style="padding:20px;">${result}</body></html>`; document.getElementById('builderOutput').value = full; });
     document.getElementById('clearCanvas')?.addEventListener('click', () => { canvasDiv.innerHTML = '<p>Drop elements here →</p>'; });
     document.getElementById('useBuilderInEditor')?.addEventListener('click', () => { let code = document.getElementById('builderOutput').value; if(code){ document.getElementById('htmlCode').value = code; refreshPreview(); navigateTo('editor'); } });
@@ -430,8 +430,17 @@
     // Initial values
     document.getElementById('htmlCode').value = currentHtmlCode;
     refreshPreview();
+   
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('✅ Service Worker registered:', reg))
+            .catch(err => console.log('❌ SW registration failed:', err));
+    }
+   
+    // Remove splash screen
     setTimeout(() => { document.getElementById('splash').style.opacity = '0'; setTimeout(() => { document.getElementById('splash').style.display = 'none'; document.getElementById('mainApp').style.display = 'flex'; }, 600); }, 2300);
-    console.log("%c MJH Studio Complete Loaded ✅", "color:#1e6f5c; font-size:16px;");
+    console.log("%c MJH Studio Complete Loaded with PWA ✅", "color:#1e6f5c; font-size:16px;");
 </script>
 </body>
 </html> 
