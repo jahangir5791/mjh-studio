@@ -51,5 +51,11 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "id": "com.mjh.studio",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": [
+    "education"
   ]
 }
