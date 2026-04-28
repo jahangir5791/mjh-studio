@@ -1,8 +1,8 @@
 const CACHE_NAME = 'mjh-studio-v1';
 const urlsToCache = [
-  '/mjhstudio/',
-  '/mjhstudio/index.html',
-  '/mjhstudio/manifest.json',
+  '/mjh-studio/',
+  '/mjh-studio/index.html',
+  '/mjh-studio/manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/blockly/12.3.1/blockly.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/blockly/12.3.1/blocks.min.js',
@@ -53,7 +53,7 @@ self.addEventListener('fetch', event => {
       })
       .catch(() => {
         // Return home page when offline
-        return caches.match('/mjhstudio/index.html');
+        return caches.match('/mjh-studio/index.html');
       })
   );
 });
