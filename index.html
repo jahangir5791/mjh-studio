@@ -22,7 +22,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
    
-    <!-- FFmpeg.wasm - CORRECTED CDN -->
+    <!-- FFmpeg.wasm -->
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/umd/ffmpeg.js"></script>
     <script src="https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js"></script>
    
@@ -142,6 +142,7 @@
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 18px; margin-bottom: 18px; }
         button { padding: 8px 20px; border: none; border-radius: 40px; font-weight: 500; cursor: pointer; background: var(--soft); transition: 0.2s; }
         button.primary { background: var(--accent); color: white; }
+        button.google-btn { background: #db4437; color: white; margin-top: 10px; }
         button.success { background: var(--success); color: white; }
         textarea, input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 20px; background: var(--card); margin: 8px 0; font-family: monospace; }
         iframe, video { width: 100%; border-radius: 24px; border: 1px solid var(--border); background: white; }
@@ -155,6 +156,14 @@
         footer { text-align: center; font-size: 10px; padding: 6px; color: var(--text-sec); background: var(--surface); border-top: 1px solid var(--border); flex-shrink:0; }
         .back-btn { background: var(--soft); border: none; padding: 6px 16px; border-radius: 40px; margin-bottom: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
         .translate-btn { background: var(--soft); border: none; padding: 6px 12px; border-radius: 30px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+        .pwd-container { position: relative; }
+        .pwd-container input { padding-right: 45px; }
+        .toggle-pwd { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-sec); }
+        .or-divider { text-align: center; margin: 15px 0; position: relative; }
+        .or-divider::before, .or-divider::after { content: ""; position: absolute; top: 50%; width: 40%; height: 1px; background: var(--border); }
+        .or-divider::before { left: 0; }
+        .or-divider::after { right: 0; }
+        .or-divider span { background: var(--card); padding: 0 10px; font-size: 12px; color: var(--text-sec); }
     </style>
 </head>
 <body>
@@ -193,7 +202,7 @@
 
     <div class="pages-container">
         <!-- Home Page -->
-        <div class="page active" id="pageHome">
+        <div class="page" id="pageHome">
             <h2 style="margin-bottom:16px;">👋 Welcome to MJH Studio</h2>
             <div class="card">
                 <div class="toolbar">
@@ -226,7 +235,7 @@
             <textarea id="generatedCode" rows="5" placeholder="Generated JavaScript will appear here..."></textarea>
         </div>
 
-        <!-- Video Studio - FIXED FFMPEG -->
+        <!-- Video Studio -->
         <div class="page" id="pageVideo">
             <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
             <h2><i class="fas fa-video"></i> Advanced Video Editor</h2>
@@ -234,7 +243,7 @@
             <div class="card">
                 <h3>Editing Tools (FFmpeg)</h3>
                 <div class="toolbar">
-                    <button id="loadFFmpegBtn" class="primary">⚡ Load FFmpeg (First time may take 30s)</button>
+                    <button id="loadFFmpegBtn" class="primary">⚡ Load FFmpeg</button>
                     <button id="trimVideoBtn">✂️ Trim (5s)</button>
                     <button id="cropVideoBtn">📐 Crop 480p</button>
                     <button id="compressVideoBtn">🗜️ Compress</button>
@@ -271,18 +280,49 @@
             <div class="card"><h4>📱 PWA / APK Info</h4><p>Use <a href="https://www.pwabuilder.com" target="_blank">PWA Builder</a> to convert this web app to Android APK easily.</p></div>
         </div>
        
-        <!-- Login Page -->
+        <!-- Login Page with Google Sign In -->
         <div class="page" id="pageLogin">
-            <div style="max-width:400px; margin:auto; padding-top:20px;"><div class="card">
-                <div id="loginForm"><h3>Login to MJH Studio</h3><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Password"><button id="doLoginBtn" class="primary">Login</button><p>New? <button id="showSignupBtn" style="background:none; color:var(--accent);">Sign Up</button></p></div>
-                <div id="signupForm" style="display:none;"><h3>Create Account</h3><input type="text" id="signupName" placeholder="Full Name"><input type="email" id="signupEmail" placeholder="Email"><input type="password" id="signupPassword" placeholder="Password"><button id="doSignupBtn" class="primary">Sign Up</button><p>Already? <button id="showLoginBtn" style="background:none;">Login</button></p></div>
-            </div></div>
+            <div style="max-width:400px; margin:auto; padding-top:20px;">
+                <div class="card">
+                    <div id="loginForm">
+                        <h3 style="text-align:center;">🔐 Login to MJH Studio</h3>
+                        <input type="email" id="loginEmail" placeholder="Email">
+                        <div class="pwd-container">
+                            <input type="password" id="loginPassword" placeholder="Password">
+                            <i class="fas fa-eye toggle-pwd" onclick="togglePassword('loginPassword', this)"></i>
+                        </div>
+                        <button id="doLoginBtn" class="primary" style="width:100%; margin-top:10px;">Login</button>
+                        
+                        <div class="or-divider"><span>OR</span></div>
+                        
+                        <button id="googleLoginBtn" class="google-btn" style="width:100%;"><i class="fab fa-google"></i> Sign in with Google</button>
+                        
+                        <p style="text-align:center; margin-top:15px;">New user? <button id="showSignupBtn" style="background:none; color:var(--accent); cursor:pointer;">Create Account</button></p>
+                    </div>
+                    <div id="signupForm" style="display:none;">
+                        <h3 style="text-align:center;">📝 Create Account</h3>
+                        <input type="text" id="signupName" placeholder="Full Name">
+                        <input type="email" id="signupEmail" placeholder="Email">
+                        <div class="pwd-container">
+                            <input type="password" id="signupPassword" placeholder="Password (min 6 characters)">
+                            <i class="fas fa-eye toggle-pwd" onclick="togglePassword('signupPassword', this)"></i>
+                        </div>
+                        <button id="doSignupBtn" class="primary" style="width:100%; margin-top:10px;">Sign Up</button>
+                        
+                        <div class="or-divider"><span>OR</span></div>
+                        
+                        <button id="googleSignupBtn" class="google-btn" style="width:100%;"><i class="fab fa-google"></i> Sign up with Google</button>
+                        
+                        <p style="text-align:center; margin-top:15px;">Already have an account? <button id="showLoginBtn" style="background:none; color:var(--accent); cursor:pointer;">Login</button></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <button class="nav-btn active" data-nav="home"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-btn" data-nav="home"><i class="fas fa-home"></i><span>Home</span></button>
         <button class="nav-btn" data-nav="editor"><i class="fas fa-code"></i><span>Editor</span></button>
         <button class="nav-btn" data-nav="blockly"><i class="fas fa-puzzle-piece"></i><span>Blockly</span></button>
         <button class="nav-btn" data-nav="video"><i class="fas fa-video"></i><span>Video</span></button>
@@ -305,6 +345,7 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const provider = new firebase.auth.GoogleAuthProvider();
    
     // ======================= ADS and GDPR =======================
     let adsEnabled = false;
@@ -317,7 +358,7 @@
     if(localStorage.getItem('gdpr_choice') === 'accepted') enableAds();
     else if(!localStorage.getItem('gdpr_choice')) document.getElementById('gdprConsent').style.display = 'flex';
    
-    // ======================= FFMPEG FIXED VERSION =======================
+    // ======================= FFMPEG =======================
     let ffmpeg = null;
     let currentVideoFile = null;
     let editedVideoBlob = null;
@@ -325,114 +366,66 @@
     const editProgress = document.getElementById('editProgress');
    
     async function loadFFmpeg() {
-        ffmpegStatus.innerText = "⏳ Loading FFmpeg (First time ~30MB download)... Please wait...";
+        ffmpegStatus.innerText = "⏳ Loading FFmpeg (~30MB download)...";
         editProgress.style.width = "10%";
-        
         try {
-            // Check if FFmpeg is available
             if (typeof FFmpegWASM === 'undefined') {
-                ffmpegStatus.innerText = "❌ FFmpeg library not loaded. Please refresh the page and try again.";
-                editProgress.style.width = "0%";
-                return;
+                throw new Error("FFmpeg library not loaded");
             }
-            
             const { FFmpeg } = FFmpegWASM;
             ffmpeg = new FFmpeg();
-            
             editProgress.style.width = "30%";
-            ffmpegStatus.innerText = "⏳ Downloading FFmpeg core files... (This may take 20-40 seconds on first use)";
-            
+            ffmpegStatus.innerText = "⏳ Downloading FFmpeg core...";
             await ffmpeg.load();
-            
             editProgress.style.width = "100%";
-            ffmpegStatus.innerText = "✅ FFmpeg ready! You can now edit videos.";
+            ffmpegStatus.innerText = "✅ FFmpeg ready!";
             setTimeout(() => editProgress.style.width = "0%", 1000);
-            
         } catch(e) {
-            console.error("FFmpeg load error:", e);
-            ffmpegStatus.innerText = "❌ Error loading FFmpeg: " + e.message + ". Please check your internet connection and refresh.";
+            ffmpegStatus.innerText = "❌ FFmpeg error: " + e.message;
             editProgress.style.width = "0%";
         }
     }
    
     async function runVideoEdit(action) {
-        if(!ffmpeg) { 
-            ffmpegStatus.innerText = "⚠️ Please click 'Load FFmpeg' first!";
-            return; 
-        }
-        if(!currentVideoFile) { 
-            ffmpegStatus.innerText = "⚠️ Please upload a video first!";
-            return; 
-        }
-        
-        ffmpegStatus.innerText = `🎬 Processing ${action}... This may take a moment.`;
+        if(!ffmpeg) { ffmpegStatus.innerText = "⚠️ Load FFmpeg first!"; return; }
+        if(!currentVideoFile) { ffmpegStatus.innerText = "⚠️ Upload a video first!"; return; }
+        ffmpegStatus.innerText = `🎬 Processing ${action}...`;
         editProgress.style.width = "20%";
-        
         try {
-            // Write video file to FFmpeg
             const data = new Uint8Array(await currentVideoFile.arrayBuffer());
             await ffmpeg.writeFile('input.mp4', data);
             editProgress.style.width = "40%";
-            
-            // Execute FFmpeg command
             let cmd = [];
-            if(action === 'trim') {
-                cmd = ['-i', 'input.mp4', '-t', '5', '-c', 'copy', '-y', 'output.mp4'];
-            } else if(action === 'crop') {
-                cmd = ['-i', 'input.mp4', '-vf', 'scale=640:480', '-c:a', 'copy', '-y', 'output.mp4'];
-            } else if(action === 'compress') {
-                cmd = ['-i', 'input.mp4', '-b:v', '600k', '-y', 'output.mp4'];
-            } else if(action === 'speed') {
-                cmd = ['-i', 'input.mp4', '-filter:v', 'setpts=0.5*PTS', '-filter:a', 'atempo=2.0', '-y', 'output.mp4'];
-            }
-            
+            if(action === 'trim') cmd = ['-i', 'input.mp4', '-t', '5', '-c', 'copy', '-y', 'output.mp4'];
+            else if(action === 'crop') cmd = ['-i', 'input.mp4', '-vf', 'scale=640:480', '-c:a', 'copy', '-y', 'output.mp4'];
+            else if(action === 'compress') cmd = ['-i', 'input.mp4', '-b:v', '600k', '-y', 'output.mp4'];
+            else if(action === 'speed') cmd = ['-i', 'input.mp4', '-filter:v', 'setpts=0.5*PTS', '-filter:a', 'atempo=2.0', '-y', 'output.mp4'];
             await ffmpeg.exec(cmd);
             editProgress.style.width = "70%";
-            
-            // Read output file
             const output = await ffmpeg.readFile('output.mp4');
             editedVideoBlob = new Blob([output.buffer], { type: 'video/mp4' });
-            const url = URL.createObjectURL(editedVideoBlob);
-            document.getElementById('videoPreview').src = url;
-            
+            document.getElementById('videoPreview').src = URL.createObjectURL(editedVideoBlob);
             editProgress.style.width = "100%";
-            ffmpegStatus.innerText = `✅ ${action} completed! Click download to save your video.`;
+            ffmpegStatus.innerText = `✅ ${action} completed!`;
             setTimeout(() => editProgress.style.width = "0%", 1000);
-            
         } catch(e) {
-            console.error("Edit error:", e);
-            ffmpegStatus.innerText = `❌ Edit failed: ${e.message}. Try a shorter video or different format.`;
+            ffmpegStatus.innerText = "❌ Edit failed: " + e.message;
             editProgress.style.width = "0%";
         }
     }
    
-    // Video event listeners
     document.getElementById('loadFFmpegBtn')?.addEventListener('click', loadFFmpeg);
     document.getElementById('trimVideoBtn')?.addEventListener('click', () => runVideoEdit('trim'));
     document.getElementById('cropVideoBtn')?.addEventListener('click', () => runVideoEdit('crop'));
     document.getElementById('compressVideoBtn')?.addEventListener('click', () => runVideoEdit('compress'));
     document.getElementById('speedVideoBtn')?.addEventListener('click', () => runVideoEdit('speed'));
     document.getElementById('downloadEditedVideoBtn')?.addEventListener('click', () => {
-        if(editedVideoBlob) { 
-            let a = document.createElement('a'); 
-            a.href = URL.createObjectURL(editedVideoBlob); 
-            a.download = 'mjh_edited_video.mp4'; 
-            a.click(); 
-            ffmpegStatus.innerText = "✅ Download started!";
-        } else { 
-            alert("No edited video. Please process a video first."); 
-        }
+        if(editedVideoBlob) { let a = document.createElement('a'); a.href = URL.createObjectURL(editedVideoBlob); a.download = 'mjh_edited_video.mp4'; a.click(); }
+        else alert("No edited video.");
     });
-    document.getElementById('videoUpload')?.addEventListener('change', e => { 
-        if(e.target.files[0]) { 
-            currentVideoFile = e.target.files[0]; 
-            document.getElementById('videoPreview').src = URL.createObjectURL(currentVideoFile); 
-            editedVideoBlob = null;
-            ffmpegStatus.innerText = "✅ Video loaded. Click 'Load FFmpeg' then choose edit option.";
-        } 
-    });
+    document.getElementById('videoUpload')?.addEventListener('change', e => { if(e.target.files[0]) { currentVideoFile = e.target.files[0]; document.getElementById('videoPreview').src = URL.createObjectURL(currentVideoFile); editedVideoBlob = null; ffmpegStatus.innerText = "✅ Video loaded. Load FFmpeg then edit."; } });
    
-    // ======================= REST OF THE APP (unchanged from working version) =======================
+    // ======================= GLOBAL STATE =======================
     let currentUser = null;
     let projects = {};
     let currentHtmlCode = '<!DOCTYPE html><html><head><title>MJH Studio</title></head><body style="font-family:sans-serif; padding:20px;"><h1>✨ MJH Studio</h1><p>Creative suite ready.</p><button onclick="alert(\'Hello\')">Click</button></body></html>';
@@ -462,6 +455,7 @@
     function refreshPreview() { let code = document.getElementById('htmlCode').value; document.getElementById('previewFrame').srcdoc = code; currentHtmlCode = code; }
     function initBlockly() { if(blocklyWorkspace) blocklyWorkspace.dispose(); blocklyWorkspace = Blockly.inject('blocklyDiv', { toolbox: `<xml><block type="controls_if"></block><block type="text_print"></block><block type="text"></block><block type="math_number"></block></xml>`, grid: { spacing: 20 } }); }
    
+    // ======================= AUTH HANDLERS (COMPLETE) =======================
     auth.onAuthStateChanged(async (user) => {
         if(user) {
             currentUser = user;
@@ -470,18 +464,114 @@
             await loadFromCloud(user);
             initBlockly();
             if(document.getElementById('pageHome').classList.contains('active')) renderProjects();
+            if(document.getElementById('pageLogin').classList.contains('active')) {
+                navigateTo('home');
+            }
         } else {
             currentUser = null;
             document.getElementById('userBadge').style.display = 'none';
-            navigateTo('login');
+            projects = {};
+            renderProjects();
+            if(document.getElementById('mainApp').style.display === 'flex') {
+                navigateTo('login');
+            }
         }
     });
-    document.getElementById('doLoginBtn')?.addEventListener('click', async () => { try { await auth.signInWithEmailAndPassword(document.getElementById('loginEmail').value, document.getElementById('loginPassword').value); } catch(e){ alert(e.message); } });
-    document.getElementById('doSignupBtn')?.addEventListener('click', async () => { try { let cred = await auth.createUserWithEmailAndPassword(document.getElementById('signupEmail').value, document.getElementById('signupPassword').value); await cred.user.updateProfile({ displayName: document.getElementById('signupName').value }); alert("Account created!"); } catch(e){ alert(e.message); } });
-    document.getElementById('showSignupBtn')?.addEventListener('click',()=>{ document.getElementById('loginForm').style.display='none'; document.getElementById('signupForm').style.display='block'; });
-    document.getElementById('showLoginBtn')?.addEventListener('click',()=>{ document.getElementById('signupForm').style.display='none'; document.getElementById('loginForm').style.display='block'; });
-    document.getElementById('logoutBtn')?.addEventListener('click', async () => { await auth.signOut(); alert("Logged out."); });
-   
+    
+    // Email/Password Login
+    document.getElementById('doLoginBtn')?.addEventListener('click', async () => {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        if(!email || !password) { alert("Please enter email and password."); return; }
+        try {
+            await auth.signInWithEmailAndPassword(email, password);
+            alert("✅ Login successful!");
+            document.getElementById('loginPassword').value = '';
+        } catch(e) {
+            let msg = e.code === 'auth/invalid-email' ? "❌ Invalid email format." :
+                      e.code === 'auth/user-not-found' ? "❌ No account found. Sign up first." :
+                      e.code === 'auth/wrong-password' ? "❌ Incorrect password." :
+                      e.code === 'auth/too-many-requests' ? "❌ Too many attempts. Try later." : "❌ Login failed: " + e.message;
+            alert(msg);
+        }
+    });
+    
+    // Email/Password Signup
+    document.getElementById('doSignupBtn')?.addEventListener('click', async () => {
+        const name = document.getElementById('signupName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        if(!name || !email || !password) { alert("Please fill all fields."); return; }
+        if(password.length < 6) { alert("Password must be at least 6 characters."); return; }
+        try {
+            const cred = await auth.createUserWithEmailAndPassword(email, password);
+            await cred.user.updateProfile({ displayName: name });
+            alert("✅ Account created! You are now logged in.");
+        } catch(e) {
+            let msg = e.code === 'auth/email-already-in-use' ? "❌ Email already registered. Login instead." :
+                      e.code === 'auth/invalid-email' ? "❌ Invalid email format." :
+                      e.code === 'auth/weak-password' ? "❌ Password too weak." : "❌ Signup failed: " + e.message;
+            alert(msg);
+        }
+    });
+    
+    // Google Sign In (for both login and signup)
+    async function googleSignIn() {
+        try {
+            const result = await auth.signInWithPopup(provider);
+            alert(`✅ Welcome ${result.user.displayName || result.user.email}!`);
+        } catch(e) {
+            alert("❌ Google sign in failed: " + e.message);
+        }
+    }
+    document.getElementById('googleLoginBtn')?.addEventListener('click', googleSignIn);
+    document.getElementById('googleSignupBtn')?.addEventListener('click', googleSignIn);
+    
+    // Logout
+    document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+        if(confirm("Are you sure you want to logout?")) {
+            try {
+                await auth.signOut();
+                alert("✅ Logged out successfully.");
+                currentUser = null;
+                projects = {};
+                currentHtmlCode = '<!DOCTYPE html><html><head><title>MJH Studio</title></head><body style="font-family:sans-serif; padding:20px;"><h1>✨ MJH Studio</h1><p>Creative suite ready.</p><button onclick="alert(\'Hello\')">Click</button></body></html>';
+                document.getElementById('htmlCode').value = currentHtmlCode;
+                refreshPreview();
+                renderProjects();
+                navigateTo('login');
+            } catch(e) {
+                alert("Logout error: " + e.message);
+            }
+        }
+    });
+    
+    // Toggle Password Visibility
+    function togglePassword(fieldId, iconElement) {
+        const field = document.getElementById(fieldId);
+        if(field.type === "password") {
+            field.type = "text";
+            iconElement.classList.remove("fa-eye");
+            iconElement.classList.add("fa-eye-slash");
+        } else {
+            field.type = "password";
+            iconElement.classList.remove("fa-eye-slash");
+            iconElement.classList.add("fa-eye");
+        }
+    }
+    window.togglePassword = togglePassword;
+    
+    // Toggle between Login and Signup forms
+    document.getElementById('showSignupBtn')?.addEventListener('click', () => {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('signupForm').style.display = 'block';
+    });
+    document.getElementById('showLoginBtn')?.addEventListener('click', () => {
+        document.getElementById('signupForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+    });
+    
+    // UI Event listeners
     document.getElementById('runPreviewBtn')?.addEventListener('click', refreshPreview);
     document.getElementById('saveHtmlProjectBtn')?.addEventListener('click', () => { let n=prompt("Project name"); if(n){ projects[n]={type:'html',content:currentHtmlCode}; renderProjects(); if(currentUser) syncToCloud(); } });
     document.getElementById('genCodeBtn')?.addEventListener('click', () => { if(blocklyWorkspace){ let code=Blockly.JavaScript.workspaceToCode(blocklyWorkspace); document.getElementById('generatedCode').value=code; } });
@@ -503,6 +593,7 @@
     document.getElementById('clearCanvas')?.addEventListener('click', () => { canvasDiv.innerHTML = '<p>Drop elements here →</p>'; });
     document.getElementById('useBuilderInEditor')?.addEventListener('click', () => { let code = document.getElementById('builderOutput').value; if(code){ document.getElementById('htmlCode').value = code; refreshPreview(); navigateTo('editor'); } });
    
+    // Navigation
     function navigateTo(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const target = document.getElementById(`page${pageId.charAt(0).toUpperCase() + pageId.slice(1)}`);
@@ -517,6 +608,7 @@
     document.getElementById('htmlCode').value = currentHtmlCode;
     refreshPreview();
    
+    // Google Translate
     function loadGoogleTranslate() {
         if (!document.querySelector('#google-translate-script')) {
             var script = document.createElement('script');
@@ -536,14 +628,16 @@
     }
     document.getElementById('translateBtn')?.addEventListener('click', loadGoogleTranslate);
    
+    // Service Worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/mjh-studio/sw.js')
             .then(reg => console.log('✅ Service Worker registered:', reg))
             .catch(err => console.log('❌ SW registration failed:', err));
     }
    
+    // Remove splash screen
     setTimeout(() => { document.getElementById('splash').style.opacity = '0'; setTimeout(() => { document.getElementById('splash').style.display = 'none'; document.getElementById('mainApp').style.display = 'flex'; }, 600); }, 2300);
-    console.log("%c MJH Studio Complete Loaded with Fixed FFmpeg ✅", "color:#1e6f5c; font-size:16px;");
+    console.log("%c MJH Studio Complete Loaded with Google Sign In ✅", "color:#1e6f5c; font-size:16px;");
 </script>
 </body>
 </html>
