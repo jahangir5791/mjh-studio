@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <meta name="description" content="MJH Studio - Professional Creative Suite with HTML Editor, Blockly, Advanced Video Editor & Drag & Drop Builder">
+    <meta name="description" content="MJH Studio - Professional Creative Suite with HTML Editor, Blockly, Video Editor & Drag & Drop Builder">
     <title>MJH Studio - Creative Suite</title>
 
     <!-- PWA -->
@@ -12,14 +12,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 
-    <!-- Google AdMob -->
+    <!-- AdMob -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4876264020851039" crossorigin="anonymous"></script>
 
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
-    <!-- FFmpeg.wasm - Updated to jsDelivr (Fixed CORS issue) -->
+    <!-- FFmpeg (Fixed Version) -->
     <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js"></script>
 
@@ -28,7 +24,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/12.3.1/blocks.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/12.3.1/javascript.min.js"></script>
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
@@ -42,51 +37,75 @@
             --text: #f1f5f9; --text-sec: #cbd5e1; --border: #334155;
             --accent: #2dd4bf; --soft: #1e2937;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); height: 100dvh; overflow: hidden; }
-        
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: system-ui, -apple-system, sans-serif; background:var(--bg); color:var(--text); height:100dvh; overflow:hidden; }
+
+        /* Cube Splash */
         #splash {
-            position: fixed; inset: 0; background: linear-gradient(135deg, #0f172a, #1e293b);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 3000; transition: opacity 0.8s ease; color: white; text-align: center;
+            position:fixed; inset:0; background:linear-gradient(135deg,#0f172a,#1e293b);
+            display:flex; flex-direction:column; justify-content:center; align-items:center;
+            z-index:3000; transition:opacity 0.8s ease; color:white; text-align:center;
         }
-        .splash-title { font-size: 46px; font-weight: 900; background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; color: transparent; }
-        .spinner { width: 42px; height: 42px; border: 4px solid rgba(255,255,255,0.25); border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .cube-scene { width:140px; height:140px; perspective:600px; margin-bottom:30px; }
+        .rotating-cube { width:100%; height:100%; position:relative; transform-style:preserve-3d; animation:rotateCube 8s infinite linear; }
+        .cube-face {
+            position:absolute; width:140px; height:140px; background:linear-gradient(135deg,#1e6f5c,#289672);
+            border:3px solid rgba(255,255,255,0.4); display:flex; align-items:center; justify-content:center;
+            font-weight:800; font-size:32px; color:white; border-radius:18px;
+        }
+        .cube-face--front  { transform: rotateY(0deg) translateZ(70px); }
+        .cube-face--back   { transform: rotateY(180deg) translateZ(70px); }
+        .cube-face--right  { transform: rotateY(90deg) translateZ(70px); }
+        .cube-face--left   { transform: rotateY(-90deg) translateZ(70px); }
+        .cube-face--top    { transform: rotateX(90deg) translateZ(70px); }
+        .cube-face--bottom { transform: rotateX(-90deg) translateZ(70px); }
+        @keyframes rotateCube { from { transform:rotateX(0) rotateY(0); } to { transform:rotateX(360deg) rotateY(360deg); } }
 
-        .main-app { display: none; height: 100dvh; flex-direction: column; }
-        .app-header { background: var(--surface); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .logo-studio { background: linear-gradient(135deg,#1e6f5c,#289672); padding: 8px 24px; border-radius: 50px; color: white; font-weight: 800; font-size: 1.45rem; }
+        .splash-title { font-size:46px; font-weight:900; background:linear-gradient(90deg,#60a5fa,#a78bfa); -webkit-background-clip:text; color:transparent; }
+        .splash-sub { color:#94a3b8; margin:15px 0 25px; }
 
-        .pages-container { flex: 1; position: relative; overflow: hidden; }
-        .page { position: absolute; inset: 0; overflow-y: auto; padding: 18px; padding-bottom: 95px; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
-        .page.active { opacity: 1; visibility: visible; }
+        .main-app { display:none; height:100dvh; flex-direction:column; }
+        .app-header { background:var(--surface); padding:12px 16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
+        .logo-studio { background:linear-gradient(135deg,#1e6f5c,#289672); padding:8px 24px; border-radius:50px; color:white; font-weight:800; font-size:1.45rem; }
 
-        .bottom-nav { background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 4px; flex-shrink: 0; }
-        .nav-btn { background: none; border: none; color: var(--text-sec); font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 10px; border-radius: 30px; }
-        .nav-btn.active { color: var(--accent); background: var(--soft); }
+        .pages-container { flex:1; position:relative; overflow:hidden; }
+        .page { position:absolute; inset:0; overflow-y:auto; padding:18px; padding-bottom:95px; opacity:0; visibility:hidden; transition:opacity 0.3s; }
+        .page.active { opacity:1; visibility:visible; }
 
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 18px; margin-bottom: 18px; }
-        button.primary { background: var(--accent); color: white; border: none; padding: 10px 22px; border-radius: 50px; font-weight: 600; cursor: pointer; }
-        button.success { background: var(--success); color: white; }
-        textarea, input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 20px; background: var(--card); margin: 8px 0; }
-        iframe { width: 100%; border-radius: 24px; border: 1px solid var(--border); min-height: 320px; }
-        .toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
-        .back-btn { background: var(--soft); padding: 8px 18px; border-radius: 50px; border: none; cursor: pointer; }
+        .bottom-nav { background:var(--surface); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:8px 4px; flex-shrink:0; }
+        .nav-btn { background:none; border:none; color:var(--text-sec); font-size:11px; display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 10px; border-radius:30px; }
+        .nav-btn.active { color:var(--accent); background:var(--soft); }
+
+        .card { background:var(--card); border:1px solid var(--border); border-radius:24px; padding:18px; margin-bottom:18px; }
+        button.primary { background:var(--accent); color:white; border:none; padding:10px 22px; border-radius:50px; font-weight:600; cursor:pointer; }
+        button.success { background:var(--success); color:white; }
+        textarea, input { width:100%; padding:14px; border:1px solid var(--border); border-radius:20px; background:var(--card); margin:8px 0; }
+        iframe { width:100%; border-radius:24px; border:1px solid var(--border); min-height:320px; }
+        .toolbar { display:flex; flex-wrap:wrap; gap:10px; margin:16px 0; }
+        .back-btn { background:var(--soft); padding:8px 18px; border-radius:50px; border:none; cursor:pointer; }
     </style>
 </head>
 <body>
 
-<!-- Splash Screen -->
+<!-- Splash Screen with Cube -->
 <div id="splash">
+    <div class="cube-scene">
+        <div class="rotating-cube">
+            <div class="cube-face cube-face--front">MJH</div>
+            <div class="cube-face cube-face--back">MJH</div>
+            <div class="cube-face cube-face--right">STUDIO</div>
+            <div class="cube-face cube-face--left">STUDIO</div>
+            <div class="cube-face cube-face--top">3D</div>
+            <div class="cube-face cube-face--bottom">APP</div>
+        </div>
+    </div>
     <div class="splash-title">MJH STUDIO</div>
-    <p style="margin:15px 0 25px; color:#94a3b8;">Creative Suite • HTML • Blockly • Video • Builder</p>
-    <div class="spinner"></div>
+    <div class="splash-sub">Creative Suite • Video • Blockly • Builder</div>
 </div>
 
-<!-- GDPR -->
+<!-- GDPR Consent -->
 <div id="gdprConsent" style="position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:4px solid var(--accent);padding:20px;z-index:5000;display:none;flex-direction:column;gap:15px;box-shadow:0 -5px 30px rgba(0,0,0,0.35);">
-    <p><i class="fas fa-shield-alt"></i> We use ads and cookies to keep this app free. Do you accept?</p>
+    <p><i class="fas fa-shield-alt"></i> We use ads and cookies to keep MJH Studio free. Do you accept?</p>
     <div style="display:flex;gap:12px;">
         <button id="acceptAds" class="primary" style="flex:1;">Accept All</button>
         <button id="declineAds" style="flex:1;background:#64748b;color:white;">Decline</button>
@@ -94,99 +113,319 @@
 </div>
 
 <div class="main-app" id="mainApp">
-    <!-- Header, Pages, Bottom Nav - Same as previous version -->
-    <!-- (To save space, I'm keeping only the changed Video Editor part prominent. Paste other pages from previous message if needed) -->
-
-    <!-- Video Editor Page (Important part) -->
-    <div class="page" id="pageVideo">
-        <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
-        <h2>🎥 Video Studio (FFmpeg)</h2>
-        <div class="card">
-            <input type="file" id="videoUpload" accept="video/*">
-            <video id="videoPreview" controls style="width:100%; max-height:260px; margin-top:12px; border-radius:16px;"></video>
-        </div>
-        <div class="card">
-            <h3>Editing Tools</h3>
-            <div class="toolbar">
-                <button id="loadFFmpegBtn" class="primary">Load FFmpeg</button>
-                <button id="trimVideoBtn">Trim 5s</button>
-                <button id="cropVideoBtn">Crop 480p</button>
-                <button id="compressVideoBtn">Compress</button>
-                <button id="speedVideoBtn">2x Speed</button>
-            </div>
-            <div id="ffmpegStatus" style="padding:12px;background:var(--soft);border-radius:12px;margin:10px 0;">FFmpeg not loaded yet...</div>
-            <div style="height:8px;background:var(--border);border-radius:10px;overflow:hidden;">
-                <div id="editProgress" style="height:100%;background:var(--accent);width:0%;transition:width 0.4s;"></div>
-            </div>
-            <button id="downloadEditedVideoBtn" class="success" style="width:100%;margin-top:15px;">Download Edited Video</button>
+    <div class="app-header">
+        <div class="logo-studio">MJH</div>
+        <div style="display:flex;gap:18px;font-size:1.4rem;color:var(--text-sec);">
+            <i class="fas fa-share-alt" id="shareBtn"></i>
+            <i class="fas fa-gift" id="rewardBtn" style="color:#fbbf24;"></i>
+            <i class="fas fa-moon" id="darkBtn"></i>
         </div>
     </div>
 
-    <!-- Other pages (Home, Editor, Blockly, DragBuilder, Projects) can be added from previous full code -->
+    <div class="pages-container">
+
+        <!-- Home -->
+        <div class="page active" id="pageHome">
+            <h2>👋 Welcome to MJH Studio</h2>
+            <div class="card">
+                <div class="toolbar">
+                    <button class="primary" onclick="navigateTo('editor')">HTML Editor</button>
+                    <button class="primary" onclick="navigateTo('blockly')">Blockly</button>
+                    <button class="primary" onclick="navigateTo('video')">Video Editor</button>
+                    <button class="primary" onclick="navigateTo('dragbuilder')">Drag Builder</button>
+                    <button class="primary" onclick="navigateTo('projects')">My Projects</button>
+                </div>
+            </div>
+            <div class="card"><h3>Recent Projects</h3><div id="recentProjectsPreview"></div></div>
+        </div>
+
+        <!-- HTML Editor -->
+        <div class="page" id="pageEditor">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2>✏️ HTML Studio</h2>
+            <div class="toolbar">
+                <button id="runPreviewBtn" class="primary">Run Preview</button>
+                <button id="saveHtmlProjectBtn">Save Project</button>
+            </div>
+            <textarea id="htmlCode" rows="14"></textarea>
+            <h3>Live Preview</h3>
+            <iframe id="previewFrame" sandbox="allow-scripts allow-same-origin allow-modals"></iframe>
+        </div>
+
+        <!-- Blockly -->
+        <div class="page" id="pageBlockly">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2>🧩 Blockly Visual Coding</h2>
+            <div id="blocklyDiv" style="height:380px;background:var(--card);border-radius:20px;margin:12px 0;"></div>
+            <div class="toolbar">
+                <button id="genCodeBtn" class="primary">Generate JavaScript</button>
+                <button id="saveBlocklyProjectBtn">Save Project</button>
+            </div>
+            <textarea id="generatedCode" rows="6" placeholder="Generated code will appear here..."></textarea>
+        </div>
+
+        <!-- Video Editor -->
+        <div class="page" id="pageVideo">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2>🎥 Video Studio</h2>
+            <div class="card">
+                <input type="file" id="videoUpload" accept="video/*">
+                <video id="videoPreview" controls style="width:100%;max-height:260px;margin-top:12px;border-radius:16px;"></video>
+            </div>
+            <div class="card">
+                <h3>FFmpeg Tools</h3>
+                <div class="toolbar">
+                    <button id="loadFFmpegBtn" class="primary">Load FFmpeg</button>
+                    <button id="trimVideoBtn">Trim 5s</button>
+                    <button id="cropVideoBtn">Crop 480p</button>
+                    <button id="compressVideoBtn">Compress</button>
+                    <button id="speedVideoBtn">2x Speed</button>
+                </div>
+                <div id="ffmpegStatus" style="padding:12px;background:var(--soft);border-radius:12px;margin:10px 0;">FFmpeg not loaded yet...</div>
+                <div style="height:8px;background:var(--border);border-radius:10px;overflow:hidden;">
+                    <div id="editProgress" style="height:100%;background:var(--accent);width:0%;transition:width 0.4s;"></div>
+                </div>
+                <button id="downloadEditedVideoBtn" class="success" style="width:100%;margin-top:15px;">Download Edited Video</button>
+            </div>
+        </div>
+
+        <!-- Drag & Drop Builder -->
+        <div class="page" id="pageDragBuilder">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2>🖱️ Drag & Drop Builder</h2>
+            <div style="background:var(--soft);border-radius:20px;padding:16px;display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;" id="draggableElements">
+                <div class="drag-element" draggable="true" data-tag="<h2 style='color:#1e6f5c;'>Beautiful Heading</h2>">📌 Heading</div>
+                <div class="drag-element" draggable="true" data-tag="<p>Creative and professional paragraph text.</p>">📝 Paragraph</div>
+                <div class="drag-element" draggable="true" data-tag="<button style='padding:12px 28px;background:#1e6f5c;color:white;border:none;border-radius:50px;'>Click Me</button>">🔘 Button</div>
+                <div class="drag-element" draggable="true" data-tag="<img src='https://picsum.photos/600/280' style='width:100%;border-radius:16px;'>">🖼️ Image</div>
+            </div>
+            <div id="builderCanvas" style="border:2px dashed var(--border);border-radius:24px;min-height:220px;padding:20px;background:var(--card);">
+                <p style="color:var(--text-sec);text-align:center;">Drop elements here →</p>
+            </div>
+            <div class="toolbar">
+                <button id="generateFromBuilder" class="primary">Generate HTML</button>
+                <button id="clearCanvas">Clear</button>
+            </div>
+            <textarea id="builderOutput" rows="5"></textarea>
+            <button id="useBuilderInEditor" class="primary" style="width:100%;margin-top:12px;">Use in HTML Editor</button>
+        </div>
+
+        <!-- Projects -->
+        <div class="page" id="pageProjects">
+            <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2>📁 My Projects</h2>
+            <div id="projectList" class="card"></div>
+            <div class="toolbar">
+                <button id="exportBackupBtn">Export All Projects</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" data-nav="home"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-btn" data-nav="editor"><i class="fas fa-code"></i><span>Editor</span></button>
+        <button class="nav-btn" data-nav="blockly"><i class="fas fa-puzzle-piece"></i><span>Blockly</span></button>
+        <button class="nav-btn" data-nav="video"><i class="fas fa-video"></i><span>Video</span></button>
+        <button class="nav-btn" data-nav="dragbuilder"><i class="fas fa-hand-pointer"></i><span>Drag</span></button>
+        <button class="nav-btn" data-nav="projects"><i class="fas fa-folder"></i><span>Projects</span></button>
+    </div>
 </div>
 
 <script>
-// ======================= CONFIG =======================
-const firebaseConfig = {
-    apiKey: "AIzaSyAlA7MDWL2WKC3OH3kxMtkHZ8w5GpSt4y8",
-    authDomain: "mjh-studio.firebaseapp.com",
-    projectId: "mjh-studio",
-    storageBucket: "mjh-studio.firebasestorage.app",
-    messagingSenderId: "899252366841",
-    appId: "1:899252366841:web:5795ec41a51f2d0c4ba128"
-};
+// ======================= Local Storage Projects =======================
+let projects = JSON.parse(localStorage.getItem('mjh_projects') || '{}');
+let currentHtmlCode = localStorage.getItem('currentHtmlCode') || 
+    `<!DOCTYPE html><html><head><title>MJH Studio</title></head><body style="padding:40px;text-align:center;font-family:sans-serif;"><h1>Welcome to MJH Studio</h1></body></html>`;
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-let currentUserId = "guest_user_" + (localStorage.getItem('guest_id') || Math.random().toString(36).substr(2,12));
-if (!localStorage.getItem('guest_id')) localStorage.setItem('guest_id', currentUserId);
-
+let blocklyWorkspace = null;
 let ffmpeg = null;
 let currentVideoFile = null;
 let editedVideoBlob = null;
 
-// ======================= FFmpeg Load Function (Fixed) =======================
+// ======================= GDPR =======================
+if (!localStorage.getItem('gdpr_choice')) {
+    document.getElementById('gdprConsent').style.display = 'flex';
+}
+document.getElementById('acceptAds').addEventListener('click', () => {
+    localStorage.setItem('gdpr_choice', 'accepted');
+    document.getElementById('gdprConsent').style.display = 'none';
+});
+document.getElementById('declineAds').addEventListener('click', () => {
+    localStorage.setItem('gdpr_choice', 'declined');
+    document.getElementById('gdprConsent').style.display = 'none';
+});
+
+// ======================= Dark Mode =======================
+document.getElementById('darkBtn').addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark') ? 'on' : 'off');
+});
+if (localStorage.getItem('darkMode') === 'on') document.body.classList.add('dark');
+
+// ======================= Navigation =======================
+function navigateTo(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page${page.charAt(0).toUpperCase() + page.slice(1)}`).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.nav === page));
+    if (page === 'editor') refreshPreview();
+}
+window.navigateTo = navigateTo;
+
+// ======================= HTML Editor =======================
+function refreshPreview() {
+    const code = document.getElementById('htmlCode').value || currentHtmlCode;
+    document.getElementById('previewFrame').srcdoc = code;
+}
+document.getElementById('runPreviewBtn').addEventListener('click', refreshPreview);
+document.getElementById('saveHtmlProjectBtn').addEventListener('click', () => {
+    let name = prompt("Enter project name:");
+    if (name) {
+        projects[name] = { type: 'html', content: document.getElementById('htmlCode').value };
+        localStorage.setItem('mjh_projects', JSON.stringify(projects));
+        alert("Project saved locally!");
+        renderProjects();
+    }
+});
+
+// ======================= Blockly =======================
+function initBlockly() {
+    if (blocklyWorkspace) blocklyWorkspace.dispose();
+    blocklyWorkspace = Blockly.inject('blocklyDiv', {
+        toolbox: `<xml><block type="controls_if"></block><block type="text_print"></block><block type="math_number"></block><block type="text"></block></xml>`
+    });
+}
+document.getElementById('genCodeBtn').addEventListener('click', () => {
+    if (blocklyWorkspace) {
+        document.getElementById('generatedCode').value = Blockly.JavaScript.workspaceToCode(blocklyWorkspace);
+    }
+});
+document.getElementById('saveBlocklyProjectBtn').addEventListener('click', () => {
+    let name = prompt("Enter Blockly project name:");
+    if (name && blocklyWorkspace) {
+        let xml = Blockly.Xml.workspaceToDom(blocklyWorkspace);
+        let xmlText = Blockly.Xml.domToText(xml);
+        projects[name] = { type: 'blockly', content: xmlText };
+        localStorage.setItem('mjh_projects', JSON.stringify(projects));
+        alert("Blockly project saved!");
+        renderProjects();
+    }
+});
+
+// ======================= Video Editor =======================
 async function loadFFmpeg() {
     const status = document.getElementById('ffmpegStatus');
     const progress = document.getElementById('editProgress');
-    
-    status.textContent = "⏳ Loading FFmpeg (this may take 15-30 seconds)...";
-    progress.style.width = "30%";
+    status.textContent = "⏳ Loading FFmpeg...";
+    progress.style.width = "40%";
 
     try {
         const { FFmpeg } = FFmpegWASM;
         ffmpeg = new FFmpeg();
-
-        await ffmpeg.load({
-            corePath: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js'
-        });
-
+        await ffmpeg.load({ corePath: "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js" });
         status.textContent = "✅ FFmpeg loaded successfully!";
         progress.style.width = "100%";
         setTimeout(() => progress.style.width = "0%", 1500);
     } catch (e) {
-        console.error(e);
-        status.textContent = "❌ Failed to load FFmpeg. Please try again.";
+        status.textContent = "❌ Failed to load FFmpeg";
         progress.style.width = "0%";
     }
 }
 
-// ======================= Other functions (navigation, GDPR, dark mode etc.) =======================
-// ... (Add from previous full version)
-
 document.getElementById('loadFFmpegBtn').addEventListener('click', loadFFmpeg);
+document.getElementById('videoUpload').addEventListener('change', e => {
+    if (e.target.files[0]) {
+        currentVideoFile = e.target.files[0];
+        document.getElementById('videoPreview').src = URL.createObjectURL(currentVideoFile);
+    }
+});
 
-// Remove splash screen
+// ======================= Drag Builder =======================
+document.querySelectorAll('.drag-element').forEach(el => {
+    el.addEventListener('dragstart', e => e.dataTransfer.setData('text/plain', el.getAttribute('data-tag')));
+});
+
+const canvas = document.getElementById('builderCanvas');
+canvas.addEventListener('dragover', e => e.preventDefault());
+canvas.addEventListener('drop', e => {
+    e.preventDefault();
+    const tag = e.dataTransfer.getData('text/plain');
+    const div = document.createElement('div');
+    div.innerHTML = tag;
+    canvas.appendChild(div.firstChild);
+});
+
+document.getElementById('generateFromBuilder').addEventListener('click', () => {
+    let result = '';
+    Array.from(canvas.children).forEach(child => {
+        if (child.tagName !== 'P') result += child.outerHTML;
+    });
+    document.getElementById('builderOutput').value = `<!DOCTYPE html><html><body style="padding:20px;">${result}</body></html>`;
+});
+
+document.getElementById('clearCanvas').addEventListener('click', () => {
+    canvas.innerHTML = '<p style="color:var(--text-sec);text-align:center;">Drop elements here →</p>';
+});
+
+document.getElementById('useBuilderInEditor').addEventListener('click', () => {
+    const code = document.getElementById('builderOutput').value;
+    if (code) {
+        document.getElementById('htmlCode').value = code;
+        refreshPreview();
+        navigateTo('editor');
+    }
+});
+
+// ======================= Projects Page =======================
+function renderProjects() {
+    const container = document.getElementById('projectList');
+    let html = '';
+    for (let name in projects) {
+        html += `<div style="margin:12px 0;padding:12px;background:var(--soft);border-radius:16px;">
+                    <strong>\( {name}</strong> ( \){projects[name].type})
+                    <button onclick="loadProject('${name}')" style="margin-left:10px;">Load</button>
+                 </div>`;
+    }
+    container.innerHTML = html || '<p>No projects saved yet.</p>';
+}
+
+function loadProject(name) {
+    const p = projects[name];
+    if (p.type === 'html') {
+        currentHtmlCode = p.content;
+        document.getElementById('htmlCode').value = currentHtmlCode;
+        refreshPreview();
+        navigateTo('editor');
+    } else if (p.type === 'blockly') {
+        // Simple alert for now (full restore needs more code)
+        alert("Blockly project load feature coming soon.");
+    }
+}
+
+document.getElementById('exportBackupBtn').addEventListener('click', () => {
+    const data = JSON.stringify(projects, null, 2);
+    const blob = new Blob([data], {type: 'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'mjh_studio_backup.json';
+    a.click();
+});
+
+// ======================= Initialize =======================
+document.getElementById('htmlCode').value = currentHtmlCode;
+refreshPreview();
+initBlockly();
+renderProjects();
+
 setTimeout(() => {
     document.getElementById('splash').style.opacity = '0';
     setTimeout(() => {
         document.getElementById('splash').style.display = 'none';
         document.getElementById('mainApp').style.display = 'flex';
-    }, 700);
-}, 2000);
+    }, 800);
+}, 2500);
 
-console.log("%c✅ MJH Studio Updated - FFmpeg CORS Fixed", "color:#10b981; font-size:15px;");
+console.log("%c✅ MJH Studio - Full Version (Without Firebase)", "color:#1e6f5c; font-size:16px;");
 </script>
 </body>
 </html>
