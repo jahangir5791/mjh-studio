@@ -3,7 +3,7 @@
   "short_name": "MJH Studio",
   "id": "/?app=com.mjh.studio",
   "description": "MJH Studio - Creative Suite with HTML Editor, Blockly, Video Studio, and Drag Builder",
-  "start_url": "/index.html",
+  "start_url": "./",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
