@@ -88,7 +88,7 @@
     @media (max-width:600px){.feature-grid{grid-template-columns:1fr}}
     .feature-btn{width:100%;padding:18px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text);text-align:left;font-weight:800}
     .feature-btn small{display:block;font-weight:600;color:var(--text-sec);margin-top:4px}
-    .guide{padding:14px 16px;border-left:4px solid var(--accent);background:var(--soft);border-radius:12px}
+    .guide{padding:14px 16px;border-left:4px solid var(--accent);background:var(--soft);border-radius:12px;line-height:1.7}
     .nav-bottom{background:var(--surface);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 4px;flex-shrink:0;overflow-x:auto}
     .nav-btn{background:none;border:none;color:var(--text-sec);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:30px;min-width:64px}
     .nav-btn.active{color:var(--accent);background:var(--soft)}
@@ -100,6 +100,7 @@
     .search-box input{flex:1;min-width:180px;margin-top:0}
     .search-result{margin-top:12px;padding:14px;border-radius:16px;background:var(--soft);border:1px solid var(--border)}
     .blockly-wrap{border-radius:20px;overflow:hidden;border:1px solid var(--border)}
+    .project-item{margin:12px 0;padding:12px;background:var(--soft);border-radius:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
   </style>
 </head>
 <body>
@@ -157,7 +158,7 @@
     <section class="page" id="pageEditor">
       <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
       <h2>HTML Editor</h2>
-      <div class="guide"><strong>How to use:</strong> লিখো বা পেস্ট করো, তারপর Run Preview চাপলে live preview দেখাবে. Save Project দিয়ে localভাবে save হবে.</div>
+      <div class="guide"><strong>How to use:</strong> এখানে HTML লিখে বা পেস্ট করে Run Preview চাপলে live preview দেখাবে। Save Project দিয়ে localভাবে save হবে।</div>
       <div class="toolbar">
         <button class="btn primary" id="runPreviewBtn">Run Preview</button>
         <button class="btn" id="saveHtmlProjectBtn">Save Project</button>
@@ -170,14 +171,14 @@
     <section class="page" id="pageBlockly">
       <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
       <h2>Blockly</h2>
-      <div class="guide"><strong>How to use:</strong> ব্লক drag করে code বানাও, তারপর Generate JavaScript চাপো. Save Project দিয়ে workspace save হবে.</div>
+      <div class="guide"><strong>How to use:</strong> Blocks button চাপলে block shelf খুলবে। সেখান থেকে block add করে workspace-এ drag করে JavaScript generate করো। Save Project দিয়ে workspace save হবে।</div>
       <div class="toolbar">
         <button class="btn primary" id="toggleBlocksBtn">Blocks</button>
         <button class="btn" id="genCodeBtn">Generate JavaScript</button>
         <button class="btn" id="saveBlocklyProjectBtn">Save Project</button>
       </div>
       <div id="blocklyBlocksPanel" class="card hidden">
-        <p style="margin-top:0;">Drag the blocks below into the workspace.</p>
+        <p style="margin-top:0;">Tap any block to add it to the workspace.</p>
         <div id="blocklyBlockShelf" class="feature-grid"></div>
       </div>
       <div class="blockly-wrap">
@@ -189,7 +190,7 @@
     <section class="page" id="pageVideo">
       <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
       <h2>Video Studio</h2>
-      <div class="guide"><strong>How to use:</strong> ভিডিও upload করো, Load FFmpeg চাপো, তারপর edit tools use করো. বড় video-তে browser memory limit হতে পারে.</div>
+      <div class="guide"><strong>How to use:</strong> ভিডিও upload করো, Load FFmpeg চাপো, তারপর edit tools use করো। বড় video-তে browser memory limit হতে পারে।</div>
       <div class="card">
         <input type="file" id="videoUpload" accept="video/*">
         <video id="videoPreview" controls style="width:100%;max-height:260px;margin-top:12px;border-radius:16px;"></video>
@@ -212,12 +213,12 @@
     <section class="page" id="pageDragBuilder">
       <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
       <h2>Drag Builder</h2>
-      <div class="guide"><strong>How to use:</strong> উপরের item drag করে canvas-এ drop করো. তারপর Generate HTML চাপো. Clear দিয়ে reset করো.</div>
+      <div class="guide"><strong>How to use:</strong> উপরের item drag করে canvas-এ drop করো। তারপর Generate HTML চাপো। Clear দিয়ে reset করো। Heading, paragraph, button, image এখন কাজ করবে।</div>
       <div style="background:var(--soft);border-radius:20px;padding:16px;display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
-        <div class="drag-element" draggable="true" data-tag="<h2 style='color:#1e6f5c;'>Beautiful Heading</h2>">📌 Heading</div>
-        <div class="drag-element" draggable="true" data-tag="<p>Creative and professional paragraph text.</p>">📝 Paragraph</div>
-        <div class="drag-element" draggable="true" data-tag="<button style='padding:12px 28px;background:#1e6f5c;color:white;border:none;border-radius:50px;'>Click Me</button>">🔘 Button</div>
-        <div class="drag-element" draggable="true" data-tag="<img src='https://picsum.photos/600/280' style='width:100%;border-radius:16px;'>">🖼️ Image</div>
+        <div class="drag-element" draggable="true" data-tag="heading">📌 Heading</div>
+        <div class="drag-element" draggable="true" data-tag="paragraph">📝 Paragraph</div>
+        <div class="drag-element" draggable="true" data-tag="button">🔘 Button</div>
+        <div class="drag-element" draggable="true" data-tag="image">🖼️ Image</div>
       </div>
       <div id="builderCanvas" style="border:2px dashed var(--border);border-radius:24px;min-height:220px;padding:20px;background:var(--card);">
         <p id="builderPlaceholder" style="color:var(--text-sec);text-align:center;">Drop elements here →</p>
@@ -233,7 +234,7 @@
     <section class="page" id="pageProjects">
       <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
       <h2>Projects</h2>
-      <div class="guide"><strong>How to use:</strong> এখানে সব saved project দেখাবে. Load দিয়ে editor বা Blockly-তে ফেরত আনতে পারবে.</div>
+      <div class="guide"><strong>How to use:</strong> এখানে সব saved project দেখাবে। Load দিয়ে editor বা Blockly-তে ফেরত আনতে পারবে।</div>
       <div id="projectList" class="card"></div>
       <div class="toolbar">
         <button class="btn primary" id="exportBackupBtn">Export All Projects</button>
@@ -249,7 +250,7 @@
         <h3>HTML Editor</h3>
         <p>Code লিখে preview দেখো, তারপর save করো। Live preview window সরাসরি নিচে কাজ করবে।</p>
         <h3>Blockly</h3>
-        <p>Blocks button থেকে block shelf খুলবে। সেখানে থাকা blocks workspace-এ drag করে JavaScript generate করো।</p>
+        <p>Blocks button থেকে block shelf খুলবে। সেখানে থাকা blocks workspace-এ add করে JavaScript generate করো।</p>
         <h3>Video Studio</h3>
         <p>Video upload করে FFmpeg tools use করো। Trim, crop, compress, speed change করা যাবে।</p>
         <h3>Drag Builder</h3>
@@ -258,13 +259,17 @@
         <p>Saved কাজ load, export, and manage করো। HTML এবং Blockly project আলাদা type হিসেবে save হয়।</p>
         <h3>Search</h3>
         <p>অ্যাপের feature, সাহায্য, বা ছোট প্রশ্ন লিখে search করতে পারবে। দ্রুত basic guidance দেখাবে।</p>
+        <h3>Translate</h3>
+        <p>Translate button দিয়ে page translate attribute toggle হবে। Page text translation-friendly রাখা হয়েছে।</p>
+        <h3>Bottom Navigation</h3>
+        <p>নিচের button গুলো Home, Editor, Blockly, Video, Drag, Projects, Search, Guide page-এ দ্রুত নিয়ে যাবে।</p>
       </div>
     </section>
 
     <section class="page" id="pageSearch">
       <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
       <h2>Search</h2>
-      <div class="guide"><strong>How to use:</strong> কিছু লিখে Search চাপলে app help এবং common answers দেখাবে.</div>
+      <div class="guide"><strong>How to use:</strong> কিছু লিখে Search চাপলে app help এবং common answers দেখাবে।</div>
       <div class="card">
         <div class="search-box">
           <input id="appSearchInput" type="text" placeholder="Type anything to search...">
@@ -470,24 +475,68 @@ document.querySelectorAll('.drag-element').forEach(el => {
 
 const canvas = document.getElementById('builderCanvas');
 const placeholder = document.getElementById('builderPlaceholder');
+
+function createBuilderNode(tag){
+  const wrap = document.createElement('div');
+  wrap.style.margin = '10px 0';
+  wrap.dataset.builder = '1';
+
+  if(tag === 'heading'){
+    const el = document.createElement('h2');
+    el.contentEditable = 'true';
+    el.innerText = 'Beautiful Heading';
+    el.style.color = '#1e6f5c';
+    el.style.margin = '0';
+    wrap.appendChild(el);
+  } else if(tag === 'paragraph'){
+    const el = document.createElement('p');
+    el.contentEditable = 'true';
+    el.innerText = 'Creative and professional paragraph text.';
+    el.style.margin = '0';
+    wrap.appendChild(el);
+  } else if(tag === 'button'){
+    const el = document.createElement('button');
+    el.contentEditable = 'true';
+    el.innerText = 'Click Me';
+    el.style.padding = '12px 28px';
+    el.style.background = '#1e6f5c';
+    el.style.color = 'white';
+    el.style.border = 'none';
+    el.style.borderRadius = '50px';
+    wrap.appendChild(el);
+  } else if(tag === 'image'){
+    const el = document.createElement('img');
+    el.src = 'https://picsum.photos/600/280';
+    el.alt = 'Builder image';
+    el.style.width = '100%';
+    el.style.borderRadius = '16px';
+    wrap.appendChild(el);
+  }
+  return wrap;
+}
+
 canvas.addEventListener('dragover', e => e.preventDefault());
 canvas.addEventListener('drop', e => {
   e.preventDefault();
   const tag = e.dataTransfer.getData('text/plain');
-  if(placeholder && document.getElementById('builderPlaceholder')) placeholder.remove();
-  const div = document.createElement('div');
-  div.innerHTML = tag;
-  canvas.appendChild(div.firstChild);
+  const old = document.getElementById('builderPlaceholder');
+  if(old) old.remove();
+  const node = createBuilderNode(tag);
+  canvas.appendChild(node);
 });
 
 document.getElementById('generateFromBuilder').addEventListener('click', () => {
   let result = '';
-  Array.from(canvas.children).forEach(child => { if(child.id !== 'builderPlaceholder') result += child.outerHTML; });
+  Array.from(canvas.children).forEach(child => {
+    if(child.id !== 'builderPlaceholder') result += child.innerHTML;
+  });
   document.getElementById('builderOutput').value = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="padding:20px;">${result}</body></html>`;
 });
+
 document.getElementById('clearCanvas').addEventListener('click', () => {
   canvas.innerHTML = '<p id="builderPlaceholder" style="color:var(--text-sec);text-align:center;">Drop elements here →</p>';
 });
+
 document.getElementById('useBuilderInEditor').addEventListener('click', () => {
   const code = document.getElementById('builderOutput').value;
   if(code){
@@ -525,7 +574,7 @@ function renderProjects(){
   const preview = document.getElementById('recentProjectsPreview');
   const names = Object.keys(projects);
   container.innerHTML = names.length ? names.map(name => `
-    <div style="margin:12px 0;padding:12px;background:var(--soft);border-radius:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;">
+    <div class="project-item">
       <div><strong>${name}</strong><br><span style="color:var(--text-sec);font-size:.95rem;">${projects[name].type}</span></div>
       <button onclick="loadProject('${name.replace(/'/g, "\\'")}')" class="btn">Load</button>
     </div>
@@ -562,15 +611,16 @@ function runSearch(){
   const out = document.getElementById('searchResult');
   const data = [
     {k:'html editor', t:'HTML Editor lets you write HTML and preview it instantly.'},
-    {k:'blockly', t:'Blockly has a Blocks button to open ready-made blocks and drag them into workspace.'},
+    {k:'blockly', t:'Blockly has a Blocks button to open ready-made blocks and add them into workspace.'},
     {k:'video', t:'Video Studio can load FFmpeg and edit uploaded videos in the browser.'},
     {k:'drag builder', t:'Drag Builder supports heading, paragraph, button, and image elements.'},
     {k:'projects', t:'Projects saves and loads HTML and Blockly work locally.'},
     {k:'guide', t:'App Guide contains detailed help for each tool.'},
     {k:'search', t:'Search helps you find feature help and basic answers.'},
-    {k:'translate', t:'Translate button toggles page translate attribute.'}
+    {k:'translate', t:'Translate button toggles page translate attribute.'},
+    {k:'recent projects', t:'Recent Projects shows your last saved items with load buttons.'}
   ];
-  const match = data.find(x => q && x.k.includes(q) || x.t.toLowerCase().includes(q));
+  const match = data.find(x => (q && x.k.includes(q)) || x.t.toLowerCase().includes(q));
   out.textContent = match ? match.t : 'No exact result found. Try: html editor, blockly, video, drag builder, projects, guide.';
 }
 
