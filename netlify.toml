@@ -1,6 +1,28 @@
+# FFmpeg WASM/CDN headers (অবশ্যই সবার উপরে)
+[[headers]]
+  for = "https://cdn.jsdelivr.net/npm/@ffmpeg/*"
+  [headers.values]
+    Cross-Origin-Embedder-Policy = "unsafe-none"
+    Cross-Origin-Opener-Policy = "unsafe-none"
+    Cross-Origin-Resource-Policy = "cross-origin"
+
+# Blockly CDN headers  
+[[headers]]
+  for = "https://cdnjs.cloudflare.com/ajax/libs/blockly/*"
+  [headers.values]
+    Cross-Origin-Embedder-Policy = "unsafe-none"
+
+# FontAwesome CDN
+[[headers]]
+  for = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/*"
+  [headers.values]
+    Cross-Origin-Embedder-Policy = "unsafe-none"
+
+# App security headers (সবশেষে)
 [[headers]]
   for = "/*"
   [headers.values]
     Cross-Origin-Opener-Policy = "same-origin"
-    Cross-Origin-Embedder-Policy = "require-corp"
     Cross-Origin-Resource-Policy = "cross-origin"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
