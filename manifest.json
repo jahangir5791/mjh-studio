@@ -1,7 +1,7 @@
 {
   "name": "MJH Studio",
   "short_name": "MJH Studio",
-  "id": "/?app=com.mjh.studio",
+  "id": "/mjh-studio",
   "description": "MJH Studio - Creative Suite with HTML Editor, Blockly, Video Studio, and Drag Builder",
   "start_url": "./",
   "scope": "/",
