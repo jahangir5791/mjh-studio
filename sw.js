@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mjh-studio-v2';
+const CACHE_NAME = 'mjh-studio-v3'; // v2 থেকে v3 করেছি
 const OFFLINE_URL = './offline.html';
 
 const ASSETS = [
