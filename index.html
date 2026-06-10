@@ -242,38 +242,10 @@
         <video id="videoPreview" controls style="width:100%;max-height:260px;margin-top:12px;border-radius:16px;"></video>
         <div class="toolbar">
           <button class="btn success" id="downloadPreviewVideoBtn">Download This Video</button>
-        <div class="video-social-links" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;">
-          <a href="https://www.facebook.com/" target="_blank" rel="noopener" style="width:56px;height:56px;display:inline-flex;align-items:center;justify-content:center;border-radius:16px;background:#1877F2;color:#fff;font-size:24px;text-decoration:none;">
-            <i class="fa-brands fa-facebook-f"></i>
-          </a>
-          <a href="https://www.youtube.com/" target="_blank" rel="noopener" style="width:56px;height:56px;display:inline-flex;align-items:center;justify-content:center;border-radius:16px;background:#FF0000;color:#fff;font-size:24px;text-decoration:none;">
-            <i class="fa-brands fa-youtube"></i>
-          </a>
-          <a href="https://www.tiktok.com/" target="_blank" rel="noopener" style="width:56px;height:56px;display:inline-flex;align-items:center;justify-content:center;border-radius:16px;background:#000;color:#fff;font-size:24px;text-decoration:none;">
-            <i class="fa-brands fa-tiktok"></i>
-          </a>
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener" style="width:56px;height:56px;display:inline-flex;align-items:center;justify-content:center;border-radius:16px;background:#E1306C;color:#fff;font-size:24px;text-decoration:none;">
-            <i class="fa-brands fa-instagram"></i>
-          </a>
         </div>
-        <div class="video-link-box" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+        <div class="video-link-box">
           <input id="videoDownloadUrl" type="text" placeholder="Paste video direct URL here for download...">
           <button class="btn primary" id="downloadFromUrlBtn">Download Link</button>
-        </div>
-        </div>
-        <div class="video-social-links" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;">
-          <a href="https://www.facebook.com/" target="_blank" rel="noopener" style="width:56px;height:56px;display:inline-flex;align-items:center;justify-content:center;border-radius:16px;background:#1877F2;color:#fff;font-size:24px;text-decoration:none;">
-            <i class="fa-brands fa-facebook-f"></i>
-          </a>
-          <a href="https://www.youtube.com/" target="_blank" rel="noopener" style="width:56px;height:56px;display:inline-flex;align-items:center;justify-content:center;border-radius:16px;background:#FF0000;color:#fff;font-size:24px;text-decoration:none;">
-            <i class="fa-brands fa-youtube"></i>
-          </a>
-          <a href="https://www.tiktok.com/" target="_blank" rel="noopener" style="width:56px;height:56px;display:inline-flex;align-items:center;justify-content:center;border-radius:16px;background:#000;color:#fff;font-size:24px;text-decoration:none;">
-            <i class="fa-brands fa-tiktok"></i>
-          </a>
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener" style="width:56px;height:56px;display:inline-flex;align-items:center;justify-content:center;border-radius:16px;background:#E1306C;color:#fff;font-size:24px;text-decoration:none;">
-            <i class="fa-brands fa-instagram"></i>
-          </a>
         </div>
       </div>
       <div class="card">
@@ -667,15 +639,23 @@ document.getElementById('saveBlocklyProjectBtn').addEventListener('click', () =>
 async function loadFFmpeg(){
   const status = document.getElementById('ffmpegStatus');
   const progress = document.getElementById('editProgress');
-
-  status.textContent = 'Initializing video tools...';
-  progress.style.width = '100%';
-
-  setTimeout(() => {
-    status.textContent =
-      'Video tools ready. Preview, upload and download are available. Advanced FFmpeg export is unavailable on GitHub Pages.';
+  status.textContent = 'Loading FFmpeg...';
+  progress.style.width = '35%';
+  try{
+    if(!window.FFmpeg) throw new Error('FFmpeg library not loaded');
+    if(!ffmpeg) ffmpeg = new FFmpeg();
+    await ffmpeg.load({
+      coreURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+      wasmURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm'
+    });
+    status.textContent = 'FFmpeg loaded successfully.';
+    progress.style.width = '100%';
+    setTimeout(() => progress.style.width = '0%', 1200);
+  } catch(err){
+    console.error(err);
+    status.textContent = 'Failed to load FFmpeg.';
     progress.style.width = '0%';
-  }, 800);
+  }
 }
 document.getElementById('loadFFmpegBtn').addEventListener('click', loadFFmpeg);
 
