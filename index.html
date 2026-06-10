@@ -639,23 +639,15 @@ document.getElementById('saveBlocklyProjectBtn').addEventListener('click', () =>
 async function loadFFmpeg(){
   const status = document.getElementById('ffmpegStatus');
   const progress = document.getElementById('editProgress');
-  status.textContent = 'Loading FFmpeg...';
-  progress.style.width = '35%';
-  try{
-    if(!window.FFmpeg) throw new Error('FFmpeg library not loaded');
-    if(!ffmpeg) ffmpeg = new FFmpeg();
-    await ffmpeg.load({
-      coreURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
-      wasmURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm'
-    });
-    status.textContent = 'FFmpeg loaded successfully.';
-    progress.style.width = '100%';
-    setTimeout(() => progress.style.width = '0%', 1200);
-  } catch(err){
-    console.error(err);
-    status.textContent = 'Failed to load FFmpeg.';
+
+  status.textContent = 'Initializing video tools...';
+  progress.style.width = '100%';
+
+  setTimeout(() => {
+    status.textContent =
+      'Video tools ready. Preview, upload and download are available. Advanced FFmpeg export is unavailable on GitHub Pages.';
     progress.style.width = '0%';
-  }
+  }, 800);
 }
 document.getElementById('loadFFmpegBtn').addEventListener('click', loadFFmpeg);
 
