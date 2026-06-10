@@ -1,38 +1,72 @@
-# MJH Studio
+MJH Studio
 
-MJH Studio is a professional, all-in-one Creative Suite designed to empower developers and creators directly in their browser. Built as a Progressive Web App (PWA), it combines essential coding and multimedia tools into a single, seamless experience.
+MJH Studio is a powerful all-in-one Creative Suite built for developers, designers, and digital creators. As a Progressive Web App (PWA), it delivers a fast, modern, and seamless browser-based experience, combining coding, visual development, and multimedia tools into a single workspace.
 
-## 🔗 Live Demo
-Access the studio here: [https://mjhstudio.netlify.app/](https://mjhstudio.netlify.app/)
+🌟 Overview
 
-## 🚀 Key Features
+Whether you're writing code, building interfaces visually, or editing media directly in your browser, MJH Studio provides the essential tools you need without requiring additional software installations.
 
-*   **HTML Editor:** Write, edit, and preview your HTML/CSS/JS code in real-time.
-*   **Blockly Visual Coding:** Use visual programming blocks to build logic without writing raw code.
-*   **Video Studio:** Perform basic browser-based video editing using FFmpeg.wasm.
-*   **Drag & Drop Builder:** Create web pages visually by dragging and dropping UI elements.
-*   **Project Manager:** Save, load, and export your work locally with ease.
-*   **Offline Support:** Built as a PWA, allowing you to access the studio even when offline.
+🚀 Features
 
-## 🛠️ Built With
+💻 HTML Editor
 
-*   **Core:** HTML5, CSS3, JavaScript
-*   **Visual Logic:** [Blockly](https://developers.google.com/blockly)
-*   **Video Processing:** [FFmpeg.wasm](https://ffmpegwasm.netlify.app/)
-*   **Infrastructure:** Hosted on [Netlify](https://www.netlify.com/)
-*   **PWA Standards:** For offline capabilities and app-like experience.
+- Write and edit HTML, CSS, and JavaScript.
+- Live preview with real-time updates.
+- Lightweight and beginner-friendly development environment.
 
-## 📱 How to Install (PWA)
+🧩 Blockly Visual Coding
 
-1.  Visit the live site: [https://mjhstudio.netlify.app/](https://mjhstudio.netlify.app/)
-2.  On mobile, tap your browser's menu (three dots).
-3.  Select **"Add to Home screen"** or **"Install App"**.
-4.  You can now access MJH Studio directly from your phone's home screen like a native app.
+- Create applications using drag-and-drop programming blocks.
+- Perfect for beginners, students, and rapid prototyping.
+- Generate code visually without manual coding.
 
-## 🤝 Contributing
+🎬 Video Studio
 
-This is a personal project. Feel free to explore the code, open issues, or suggest improvements!
+- Browser-based video processing and editing.
+- Trim, merge, and export media directly from your device.
+- Powered by modern web technologies for client-side processing.
 
-## 📄 License
+🎨 Drag & Drop Builder
 
-This project is open-source.
+- Design web pages visually using draggable UI components.
+- Rapidly create layouts without writing code.
+- Ideal for quick prototyping and interface design.
+
+📁 Project Manager
+
+- Organize projects efficiently.
+- Save, load, import, and export project files.
+- Keep your work structured and accessible.
+
+📱 Progressive Web App (PWA)
+
+- Install MJH Studio like a native application.
+- Works across desktop and mobile devices.
+- Offline support for uninterrupted productivity.
+
+🛠️ Technologies Used
+
+- HTML5
+- CSS3
+- JavaScript (ES6+)
+- Blockly
+- FFmpeg.wasm
+- Progressive Web App (PWA) Technologies
+- Service Workers
+- Web APIs
+
+🎯 Vision
+
+MJH Studio aims to provide a complete browser-based creative environment where coding, design, and media production come together in one place. The goal is to make powerful development and creation tools accessible to everyone, regardless of device or platform.
+
+🤝 Contributions
+
+Suggestions, bug reports, and feature requests are always welcome. Community feedback helps improve MJH Studio and shape future updates.
+
+📄 License
+
+This project is released as open-source software. Feel free to explore, modify, and contribute according to the license terms.
+
+---
+
+MJH Studio — Create, Build, Code, and Edit Anywhere.
