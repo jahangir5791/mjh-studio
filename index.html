@@ -249,28 +249,17 @@
         </div>
       </div>
       <div class="card">
-        <h3>Social Media</h3>
-        <div class="video-social-links" style="display:flex;gap:16px;flex-wrap:wrap;margin:14px 0;">
-          <a href="https://www.facebook.com/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:14px;background:#1877F2;color:#fff;font-weight:700;text-decoration:none;">
-            <i class="fa-brands fa-facebook-f" style="font-size:20px;"></i> Facebook
-          </a>
-          <a href="https://www.youtube.com/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:14px;background:#FF0000;color:#fff;font-weight:700;text-decoration:none;">
-            <i class="fa-brands fa-youtube" style="font-size:20px;"></i> YouTube
-          </a>
-          <a href="https://www.tiktok.com/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:14px;background:#000;color:#fff;font-weight:700;text-decoration:none;">
-            <i class="fa-brands fa-tiktok" style="font-size:20px;"></i> TikTok
-          </a>
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:14px;background:#E1306C;color:#fff;font-weight:700;text-decoration:none;">
-            <i class="fa-brands fa-instagram" style="font-size:20px;"></i> Instagram
-          </a>
+        <h3>FFmpeg Tools</h3>
+        <div class="toolbar">
+          <button class="btn primary" id="loadFFmpegBtn">Load FFmpeg</button>
+          <button class="btn" id="trimVideoBtn">Trim 5s</button>
+          <button class="btn" id="cropVideoBtn">Crop 480p</button>
+          <button class="btn" id="compressVideoBtn">Compress</button>
+          <button class="btn" id="speedVideoBtn">2x Speed</button>
         </div>
-        <div style="margin-top:16px;padding:14px;background:var(--soft);border-radius:14px;border:1px solid var(--border);">
-          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-            <input id="videoShareUrl" type="text" placeholder="Paste video link here" style="flex:1;min-width:200px;">
-            <button class="btn primary" onclick="shareVideo()" style="white-space:nowrap;">Share</button>
-            <button class="btn success" onclick="downloadVideo()" style="white-space:nowrap;">Download</button>
-          </div>
-        </div>
+        <div id="ffmpegStatus" class="status">FFmpeg not loaded yet...</div>
+        <div class="progress-wrap"><div class="progress-bar" id="editProgress"></div></div>
+        <button class="btn success" id="downloadEditedVideoBtn" style="width:100%;margin-top:15px;">Download Edited Video</button>
       </div>
     </section>
 
