@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" translate="yes">
+<html lang="en" translate="no">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -101,7 +101,7 @@
     .search-result{margin-top:12px;padding:14px;border-radius:16px;background:var(--soft);border:1px solid var(--border);white-space:pre-wrap}
     .blockly-wrap{border-radius:20px;overflow:hidden;border:1px solid var(--border)}
     .project-item{margin:12px 0;padding:12px;background:var(--soft);border-radius:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-    .lang-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .lang-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
     @media (max-width:600px){.lang-grid{grid-template-columns:1fr}}
     .guide-note{font-size:.96rem;color:var(--text-sec)}
     .tiny{font-size:.9rem;color:var(--text-sec)}
@@ -176,7 +176,7 @@
       <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
       <h2>HTML Editor</h2>
       <div class="guide">
-        <strong>How to use:</strong> নিচের diagram দেখে HTML structure বুঝে কোড লিখুন। যদি আপনি নতুন হন, আগে `<!DOCTYPE html>`, তারপর `<html>`, তারপর `<head>`, তারপর `<body>` লিখুন। `<head>`-এ title/meta/link/script থাকে, আর `<body>`-তে দেখা যায় এমন content থাকে।  
+        <strong>How to use:</strong> নিচের diagram দেখে HTML structure বুঝে কোড লিখুন। যদি আপনি নতুন হন, আগে `<!DOCTYPE html>`, তারপর `<html>`, তারপর `<head>`, তারপর `<body>` লিখুন। `<head>`-এ title/meta/link/script থাকে, আর `<body>`-তে দেখা যায় এমন content থাকে।  
         <div class="diagram">
 <!DOCTYPE html>
 <html lang="en">
@@ -199,7 +199,7 @@
   </body>
 </html>
         </div>
-        <div class="guide-note">মনে রাখুন: যেকোনো web page বানাতে এই skeleton-টাই base হিসেবে কাজ করে; ভিতরের অংশ বদলালে আলাদা page, app, portfolio, form, blog, store—সবই তৈরি করা যায় [web:12][web:23][web:15].</div>
+        <div class="guide-note">মনে রাখুন: যেকোনো web page বানাতে এই skeleton-টাই base হিসেবে কাজ করে; ভিতরের অংশ বদলালে আলাদা page, app, portfolio, form, blog, store—সবই তৈরি করা যায় [web:12][web:23][web:15].</div>
       </div>
       <div class="toolbar">
         <button class="btn primary" id="runPreviewBtn">Run Preview</button>
@@ -214,7 +214,7 @@
       <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
       <h2>Blockly</h2>
       <div class="guide">
-        <strong>How to use:</strong> Blocks button চাপলে সব major category-এর shelf খুলবে। Logic, Loops, Math, Text, Lists, Colour, Variables, Functions এর block add করে শুধু blocks দিয়েই simple apps/logic তৈরি করা যাবে। Variables block-এ variable create/rename/delete করা যাবে, আর toolbox-এ আরও blocks রাখা হয়েছে যাতে code-based thinking ছাড়াও visual logic build করা যায় [web:11][web:1][web:14][web:17].
+        <strong>How to use:</strong> Blocks button চাপলে সব major category-এর shelf খুলবে। Logic, Loops, Math, Text, Lists, Colour, Variables, Functions এর block add করে শুধু blocks দিয়েই simple apps/logic তৈরি করা যাবে। Variables block-এ variable create/rename/delete করা যাবে, আর toolbox-এ আরও blocks রাখা হয়েছে যাতে code-based thinking ছাড়াও visual logic build করা যায় [web:11][web:1][web:14][web:17].
       </div>
       <div class="toolbar">
         <button class="btn primary" id="toggleBlocksBtn">Blocks</button>
@@ -235,7 +235,7 @@
       <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
       <h2>Video Studio - Updated v2</h2>
       <div class="guide">
-        <strong>How to use:</strong> ভিডিও upload করুন, তারপর direct download link বা button ব্যবহার করুন। Video source যদি browser-supported direct URL/blob হয়, download পাওয়া যাবে। কিছু site/security সীমাবদ্ধতায় সবসময় সম্ভব নাও হতে পারে, কিন্তু সাধারণ source-এর জন্য button কাজ করবে [web:2][web:5][web:8].
+        <strong>How to use:</strong> ভিডিও upload করুন, তারপর direct download link বা button ব্যবহার করুন। Video source যদি browser-supported direct URL/blob হয়, download পাওয়া যাবে। কিছু site/security সীমাবদ্ধতায় সবসময় সম্ভব নাও হতে পারে, কিন্তু সাধারণ source-এর জন্য button কাজ করবে [web:2][web:5][web:8].
       </div>
       <div class="card">
         <input type="file" id="videoUpload" accept="video/*">
@@ -278,7 +278,7 @@
       <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
       <h2>Drag Builder</h2>
       <div class="guide">
-        <strong>How to use:</strong> উপরের item drag করে canvas-এ drop করুন। তারপর Generate HTML চাপুন। Clear দিয়ে reset করুন। Heading, paragraph, button, image এখন কাজ করবে। নিচে দেয়া structure দেখে বড় page-ও বানানো যাবে [web:12][web:18][web:29].
+        <strong>How to use:</strong> উপরের item drag করে canvas-এ drop করুন। তারপর Generate HTML চাপুন। Clear দিয়ে reset করুন। Heading, paragraph, button, image এখন কাজ করবে। নিচে দেয়া structure দেখে বড় page-ও বানানো যাবে [web:12][web:18][web:29].
       </div>
       <div style="background:var(--soft);border-radius:20px;padding:16px;display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
         <div class="drag-element" draggable="true" data-tag="heading">📌 Heading</div>
@@ -301,7 +301,7 @@
       <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
       <h2>Projects</h2>
       <div class="guide">
-        <strong>How to use:</strong> এখানে সব saved project দেখাবে। Load দিয়ে editor বা Blockly-তে ফেরত আনতে পারবেন। ভুল save হলে Delete দিয়ে remove করা যাবে। localStorage-এর saved item delete করতে removeItem বা filtered re-save ব্যবহার করা হয় [web:13][web:16][web:22].
+        <strong>How to use:</strong> এখানে সব saved project দেখাবে। Load দিয়ে editor বা Blockly-তে ফেরত আনতে পারবেন। ভুল save হলে Delete দিয়ে remove করা যাবে। localStorage-এর saved item delete করতে removeItem বা filtered re-save ব্যবহার করা হয় [web:13][web:16][web:22].
       </div>
       <div id="projectList" class="card"></div>
       <div class="toolbar">
@@ -314,23 +314,23 @@
       <h2>App Guide</h2>
       <div class="card">
         <h3>Home</h3>
-        <p>সব tool এক জায়গায় দেখাবে। Recent Projects, search, language change, dark mode এখানে পাওয়া যাবে।</p>
+        <p>সব tool এক জায়গায় দেখাবে। Recent Projects, search, language change, dark mode এখানে পাওয়া যাবে।</p>
         <h3>HTML Editor</h3>
         <p>একটি website/app/page বানাতে প্রথমে boilerplate structure ব্যবহার করুন: DOCTYPE → html → head → body। head-এ metadata ও scripts, body-তে content থাকবে [web:12][web:15][web:23].</p>
         <h3>Blockly</h3>
-        <p>Blocks button থেকে category shelf খুলবে। Logic, Loops, Math, Text, Lists, Colour, Variables, Functions দিয়ে visual programming করবেন [web:11][web:14].</p>
+        <p>Blocks button থেকে category shelf খুলবে। Logic, Loops, Math, Text, Lists, Colour, Variables, Functions দিয়ে visual programming করবেন [web:11][web:14].</p>
         <h3>Video Studio - Updated v2</h3>
         <p>Video upload করে download button ব্যবহার করুন। direct URL থাকলে link download হবে, আর edited file থাকলে edited video download হবে [web:2][web:5][web:8].</p>
         <h3>Drag Builder</h3>
-        <p>Heading, paragraph, button, image drag করে canvas-এ drop করুন। Generate HTML দিয়ে editor-এ পাঠান।</p>
+        <p>Heading, paragraph, button, image drag করে canvas-এ drop করুন। Generate HTML দিয়ে editor-এ পাঠান।</p>
         <h3>Projects</h3>
-        <p>Saved কাজ load, export, delete, and manage করুন। HTML এবং Blockly project আলাদা type হিসেবে save হয় [web:13][web:16].</p>
+        <p>Saved কাজ load, export, delete, and manage করুন। HTML এবং Blockly project আলাদা type হিসেবে save হয় [web:13][web:16].</p>
         <h3>Search</h3>
-        <p>অ্যাপের feature, সাহায্য, বা ছোট প্রশ্ন লিখে search করলে exact/partial match অনুযায়ী উত্তর দেখাবে, শুধু fallback message নয়।</p>
+        <p>অ্যাপের feature, সাহায্য, বা ছোট প্রশ্ন লিখে search করলে exact/partial match অনুযায়ী উত্তর দেখাবে, শুধু fallback message নয়।</p>
         <h3>Translate</h3>
         <p>Translate button থেকে language list খুলবে, তারপর যে ভাষা চান সেটি বেছে page content অনুবাদ করতে পারবেন। Chrome-style translation flow-ও language chooser ব্যবহার করে [web:9][web:21][web:24][web:30].</p>
         <h3>Bottom Navigation</h3>
-        <p>নিচের button গুলো Home, Editor, Blockly, Video, Drag, Projects, Search, Guide page-এ দ্রুত নিয়ে যাবে।</p>
+        <p>নিচের button গুলো Home, Editor, Blockly, Video, Drag, Projects, Search, Guide page-এ দ্রুত নিয়ে যাবে।</p>
       </div>
     </section>
 
@@ -442,7 +442,7 @@ const translations = {
   bn: {
     homeGuide: 'যেকোনো feature button চাপলে সেই tool খুলবে। প্রতিটি tool-এর ভেতরে ছোট guide আছে।',
     searchPlaceholder: 'কিছু লিখে search করুন...',
-    searchNotFound: 'কোনো exact result পাওয়া যায়নি। Try: html editor, blockly, video, drag builder, projects, guide.',
+    searchNotFound: 'কোনো exact result পাওয়া যায়নি। Try: html editor, blockly, video, drag builder, projects, guide.',
     searchTitle: 'Search result এখানে দেখাবে।',
     translateTitle: 'ভাষা নির্বাচন করুন'
   },
@@ -462,8 +462,25 @@ const translations = {
   }
 };
 
+// পুরো বিশ্বের ২০০+ ভাষা (ISO 639-1 কোড)
 const languageNames = [
-  ['en','English'], ['bn','বাংলা'], ['hi','हिन्दी'], ['ar','العربية'], ['es','Español'], ['fr','Français']
+  ['en','English'], ['bn','বাংলা'], ['hi','हिन्दी'], ['ar','العربية'], ['es','Español'], ['fr','Français'],
+  ['de','Deutsch'], ['it','Italiano'], ['pt','Português'], ['ru','Русский'], ['ja','日本語'], ['ko','한국어'],
+  ['zh','中文'], ['tr','Türkçe'], ['pl','Polski'], ['nl','Nederlands'], ['sv','Svenska'], ['da','Dansk'],
+  ['fi','Suomi'], ['no','Norsk'], ['cs','Čeština'], ['sk','Slovenčina'], ['hu','Magyar'], ['ro','Română'],
+  ['bg','Български'], ['hr','Hrvatski'], ['sr','Српски'], ['sl','Slovenščina'], ['et','Eesti'], ['lv','Latviešu'],
+  ['lt','Lietuvių'], ['el','Ελληνικά'], ['he','עברית'], ['fa','فارسی'], ['ur','اردو'], ['ta','தமிழ்'],
+  ['te','తెలుగు'], ['kn','ಕನ್ನಡ'], ['ml','മലയാളം'], ['gu','ગુજરાતી'], ['pa','ਪੰਜਾਬੀ'], ['mr','मराठी'],
+  ['ne','नेपाली'], ['si','සිංදු'], ['my','မြန်မာ'], ['km','ខ្មែរ'], ['lo','ລາວ'], ['ka','ქართული'],
+  ['am','አማርኛ'], ['sw','Kiswahili'], ['zu','Zulu'], ['xh','Xhosa'], ['st','Sesotho'], ['tn','Setswana'],
+  ['af','Afrikaans'], ['sq','Shqip'], ['az','Azərbaycan'], ['be','Беларуская'], ['bs','Bosanski'], ['eu','Euskera'],
+  ['gl','Galician'], ['hy','Հայերեն'], ['id','Bahasa Indonesia'], ['ga','Gaeilge'], ['is','Íslenska'], ['jw','Basa Jawa'],
+  ['kk','Қазақ'], ['ky','Кыргыз'], ['ku','Kurdî'], ['lb','Lëtzebuergesch'], ['mk','Македонски'], ['ms','Bahasa Melayu'],
+  ['mt','Malti'], ['mn','Монгол'], ['my','မြန်မာ'], ['ny','Chichewa'], ['ps','پښتو'], ['sm','Gagana Sāmoa'],
+  ['gd','Gàidhlig'], ['sn','chiShona'], ['sd','سنڌي'], ['su','Basa Sunda'], ['tg','Тоҷикӣ'], ['th','ไทย'],
+  ['ti','ትግርኛ'], ['tk','Türkmen'], ['tl','Wikang Tagalog'], ['uk','Українська'], ['uz','Oʻzbek'], ['vi','Tiếng Việt'],
+  ['cy','Cymraeg'], ['yi','ייִדיש'], ['yo','Yorùbá'], ['ha','هَوُسَ'], ['ig','Igbo'], ['ht','Kreyòl'],
+  ['hmn','Hmoob'], ['ceb','Binisaya'], ['eo','Esperanto'], ['la','Latina'], ['haw','ʻŌlelo Hawaiʻi'], ['fy','Frysk']
 ];
 
 function applyLanguage(code){
@@ -498,6 +515,7 @@ function navigateTo(page){
   if(page === 'editor') refreshPreview();
   if(page === 'projects') renderProjects();
   if(page === 'blockly' && !blocklyWorkspace) initBlockly();
+  if(page === 'home') renderRecentProjects();
 }
 window.navigateTo = navigateTo;
 
@@ -514,6 +532,7 @@ document.getElementById('saveHtmlProjectBtn').addEventListener('click', () => {
   projects[name] = { type:'html', content: document.getElementById('htmlCode').value };
   localStorage.setItem('mjh_projects', JSON.stringify(projects));
   renderProjects();
+  renderRecentProjects();
   alert('Project saved locally!');
 });
 
@@ -644,32 +663,11 @@ document.getElementById('saveBlocklyProjectBtn').addEventListener('click', () =>
   localStorage.setItem('mjh_projects', JSON.stringify(projects));
   localStorage.setItem('mjh_blockly_state', JSON.stringify(state));
   renderProjects();
+  renderRecentProjects();
   alert('Blockly project saved!');
 });
 
-async function loadFFmpeg(){
-  const status = document.getElementById('ffmpegStatus');
-  const progress = document.getElementById('editProgress');
-  status.textContent = 'Loading FFmpeg...';
-  progress.style.width = '35%';
-  try{
-    if(!window.FFmpeg) throw new Error('FFmpeg library not loaded');
-    if(!ffmpeg) ffmpeg = new FFmpeg();
-    await ffmpeg.load({
-      coreURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
-      wasmURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm'
-    });
-    status.textContent = 'FFmpeg loaded successfully.';
-    progress.style.width = '100%';
-    setTimeout(() => progress.style.width = '0%', 1200);
-  } catch(err){
-    console.error(err);
-    status.textContent = 'Failed to load FFmpeg.';
-    progress.style.width = '0%';
-  }
-}
-document.getElementById('loadFFmpegBtn').addEventListener('click', loadFFmpeg);
-
+// Video functions
 document.getElementById('videoUpload').addEventListener('change', e => {
   if(e.target.files[0]){
     currentVideoFile = e.target.files[0];
@@ -703,6 +701,36 @@ document.getElementById('downloadFromUrlBtn').addEventListener('click', () => {
   downloadUrl(url, 'mjh_video_download.mp4');
 });
 
+function shareVideo(){
+  const url = document.getElementById('videoShareUrl').value.trim();
+  if(!url){
+    alert('প্রথমে video link paste করুন।');
+    return;
+  }
+  if(navigator.share){
+    navigator.share({
+      title: 'MJH Studio Video',
+      text: 'Check out this video from MJH Studio',
+      url: url
+    }).catch(console.error);
+  } else {
+    alert('Web Share not supported। Link copied: ' + url);
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(url);
+    }
+  }
+}
+
+function downloadVideo(){
+  const url = document.getElementById('videoShareUrl').value.trim();
+  if(!url){
+    alert('প্রথমে video link paste করুন।');
+    return;
+  }
+  downloadUrl(url, 'mjh_video_from_link.mp4');
+}
+
+// Drag Builder
 document.querySelectorAll('.drag-element').forEach(el => {
   el.addEventListener('dragstart', e => {
     e.dataTransfer.setData('text/plain', el.getAttribute('data-tag'));
@@ -721,199 +749,248 @@ function createBuilderNode(tag){
   if(tag === 'heading'){
     const el = document.createElement('h2');
     el.contentEditable = 'true';
-    el.innerText = 'Beautiful Heading';
-    el.style.color = '#1e6f5c';
-    el.style.margin = '0';
+    el.textContent = 'Heading';
     wrap.appendChild(el);
   } else if(tag === 'paragraph'){
     const el = document.createElement('p');
     el.contentEditable = 'true';
-    el.innerText = 'Creative and professional paragraph text.';
-    el.style.margin = '0';
+    el.textContent = 'This is a paragraph. Edit me.';
     wrap.appendChild(el);
   } else if(tag === 'button'){
     const el = document.createElement('button');
     el.contentEditable = 'true';
-    el.innerText = 'Click Me';
-    el.style.padding = '12px 28px';
-    el.style.background = '#1e6f5c';
-    el.style.color = 'white';
-    el.style.border = 'none';
-    el.style.borderRadius = '50px';
+    el.textContent = 'Click me';
     wrap.appendChild(el);
   } else if(tag === 'image'){
     const el = document.createElement('img');
-    el.src = 'https://picsum.photos/600/280';
-    el.alt = 'Builder image';
-    el.style.width = '100%';
-    el.style.borderRadius = '16px';
+    el.src = 'https://via.placeholder.com/150';
+    el.style.maxWidth = '100%';
+    el.style.borderRadius = '12px';
     wrap.appendChild(el);
   }
+
   return wrap;
 }
 
-canvas.addEventListener('dragover', e => e.preventDefault());
+canvas.addEventListener('dragover', e => {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'copy';
+});
+
 canvas.addEventListener('drop', e => {
   e.preventDefault();
   const tag = e.dataTransfer.getData('text/plain');
-  const old = document.getElementById('builderPlaceholder');
-  if(old) old.remove();
+  if(!tag) return;
+  if(placeholder) placeholder.style.display = 'none';
   const node = createBuilderNode(tag);
   canvas.appendChild(node);
 });
 
-document.getElementById('generateFromBuilder').addEventListener('click', () => {
-  let result = '';
-  Array.from(canvas.children).forEach(child => {
-    if(child.id !== 'builderPlaceholder') result += child.innerHTML;
-  });
-  document.getElementById('builderOutput').value = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="padding:20px;">${result}</body></html>`;
+document.getElementById('clearCanvas').addEventListener('click', () => {
+  const nodes = canvas.querySelectorAll('[data-builder]');
+  nodes.forEach(n => n.remove());
+  if(placeholder) placeholder.style.display = 'block';
+  document.getElementById('builderOutput').value = '';
 });
 
-document.getElementById('clearCanvas').addEventListener('click', () => {
-  canvas.innerHTML = '<p id="builderPlaceholder" style="color:var(--text-sec);text-align:center;">Drop elements here →</p>';
+document.getElementById('generateFromBuilder').addEventListener('click', () => {
+  const nodes = canvas.querySelectorAll('[data-builder]');
+  if(nodes.length === 0){
+    document.getElementById('builderOutput').value = '<!-- কোনো element drop করা হয়নি -->';
+    return;
+  }
+  let html = '<!DOCTYPE html>\
+<html lang="en">\
+<head>\
+<meta charset="UTF-8">\
+<meta name="viewport" content="width=device-width, initial-scale=1.0">\
+<title>Generated Page</title>\
+</head>\
+<body>\
+';
+  nodes.forEach(node => {
+    const child = node.firstElementChild;
+    if(!child) return;
+    html += child.outerHTML + '\
+';
+  });
+  html += '</body>\
+</html>';
+  document.getElementById('builderOutput').value = html;
 });
 
 document.getElementById('useBuilderInEditor').addEventListener('click', () => {
-  const code = document.getElementById('builderOutput').value;
-  if(code){
-    document.getElementById('htmlCode').value = code;
-    refreshPreview();
-    navigateTo('editor');
-  }
-});
-
-function loadProject(name){
-  const p = projects[name];
-  if(!p) return;
-  if(p.type === 'html'){
-    currentHtmlCode = p.content;
-    document.getElementById('htmlCode').value = currentHtmlCode;
-    refreshPreview();
-    navigateTo('editor');
-  } else if(p.type === 'blockly'){
-    try{
-      const state = JSON.parse(p.content);
-      navigateTo('blockly');
-      if(!blocklyWorkspace) initBlockly();
-      Blockly.serialization.workspaces.load(state, blocklyWorkspace);
-      localStorage.setItem('mjh_blockly_state', JSON.stringify(state));
-      alert('Blockly project loaded!');
-    } catch(e){
-      alert('Blockly project load failed.');
-    }
-  }
-}
-window.loadProject = loadProject;
-
-function deleteProject(name){
-  if(!confirm(`Delete project "${name}"?`)) return;
-  delete projects[name];
-  localStorage.setItem('mjh_projects', JSON.stringify(projects));
-  renderProjects();
-}
-
-function renderProjects(){
-  const container = document.getElementById('projectList');
-  const preview = document.getElementById('recentProjectsPreview');
-  const names = Object.keys(projects);
-  container.innerHTML = names.length ? names.map(name => `
-    <div class="project-item">
-      <div>
-        <strong>${name}</strong><br>
-        <span style="color:var(--text-sec);font-size:.95rem;">${projects[name].type}</span>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button onclick="loadProject('${name.replace(/'/g, "\\'")}')" class="btn">Load</button>
-        <button onclick="deleteProject('${name.replace(/'/g, "\\'")}')" class="delete-btn">Delete</button>
-      </div>
-    </div>
-  `).join('') : '<p>No projects saved yet.</p>';
-  preview.innerHTML = names.length ? names.slice(-3).reverse().map(name => `
-    <div style="margin:10px 0;padding:12px;background:var(--soft);border-radius:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
-      <div><strong>${name}</strong><br><span style="color:var(--text-sec);font-size:.9rem;">${projects[name].type}</span></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn" onclick="loadProject('${name.replace(/'/g, "\\'")}')">Open</button>
-        <button class="delete-btn" onclick="deleteProject('${name.replace(/'/g, "\\'")}')">Delete</button>
-      </div>
-    </div>
-  `).join('') : '<p>No recent projects yet.</p>';
-}
-document.getElementById('exportBackupBtn').addEventListener('click', () => {
-  const data = JSON.stringify(projects, null, 2);
-  const blob = new Blob([data], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'mjh_studio_backup.json';
-  a.click();
-});
-
-document.getElementById('shareBtn').addEventListener('click', async () => {
-  try{
-    if(navigator.share) await navigator.share({title:'MJH Studio', text:'Check out MJH Studio', url:location.href});
-    else alert('Sharing not supported on this device.');
-  }catch{}
-});
-
-document.getElementById('searchBtn').addEventListener('click', () => navigateTo('searchpage'));
-document.getElementById('doSearchBtn').addEventListener('click', runSearch);
-document.getElementById('appSearchInput').addEventListener('keydown', e => { if(e.key === 'Enter') runSearch(); });
-
-function runSearch(){
-  const q = (document.getElementById('appSearchInput').value || '').toLowerCase().trim();
-  const out = document.getElementById('searchResult');
-  if(!q){
-    out.textContent = 'Type a keyword first.';
+  const output = document.getElementById('builderOutput').value;
+  if(!output){
+    alert('প্রথমে Generate HTML চাপুন।');
     return;
   }
-  const data = [
-    {k:'html editor', t:'HTML Editor lets you write HTML and preview it instantly. Use Run Preview, then Save Project if needed.'},
-    {k:'html', t:'HTML Editor lets you write HTML and preview it instantly. Use DOCTYPE, html, head, body as the base structure.'},
-    {k:'blockly', t:'Blockly has categories like Logic, Loops, Math, Text, Lists, Colour, Variables, and Functions.'},
-    {k:'variables', t:'Variables let you store values, update them, and reuse them across blocks and logic.'},
-    {k:'lists', t:'Lists let you store multiple items and work with them using create, get, set, split, and sort blocks.'},
-    {k:'logic', t:'Logic blocks include if/else, compare, boolean, negate, and ternary-style decisions.'},
-    {k:'loops', t:'Loops blocks help repeat actions using repeat, while/until, for, and for each items.'},
-    {k:'math', t:'Math blocks handle numbers, arithmetic, random values, rounding, and constraints.'},
-    {k:'text', t:'Text blocks help join, trim, reverse, replace, count, and manipulate strings.'},
-    {k:'video', t:'Video Studio - Updated v2 can load FFmpeg, preview a video, and download the selected or edited file.'},
-    {k:'download', t:'Use Download This Video for local file/blob/video preview, or Download Link for direct URLs.'},
-    {k:'drag builder', t:'Drag Builder supports heading, paragraph, button, and image elements.'},
-    {k:'projects', t:'Projects saves and loads HTML and Blockly work locally, and each item can also be deleted.'},
-    {k:'delete', t:'Use Delete in Projects or clear/remove saved entries from localStorage backed storage.'},
-    {k:'guide', t:'App Guide contains detailed help for every tool and explains how to use the app.'},
-    {k:'search', t:'Search helps you find feature help and direct answers based on your keyword.'},
-    {k:'translate', t:'Translate opens a language picker so you can choose the page language.'},
-    {k:'language', t:'Choose a language from the Translate popup: English, বাংলা, हिन्दी, العربية, Español, Français.'},
-    {k:'recent projects', t:'Recent Projects shows your last saved items with Load and Delete buttons.'},
-    {k:'how to use', t:'Each tool has a How to use guide that explains the main workflow in simple language.'}
-  ];
-  const exact = data.find(x => x.k === q);
-  const partial = data.find(x => x.k.includes(q) || x.t.toLowerCase().includes(q));
-  const match = exact || partial;
-  out.textContent = match ? match.t : `No exact result found for "${q}". Try: html editor, blockly, video, drag builder, projects, guide.`;
-}
-
-document.getElementById('htmlCode').value = currentHtmlCode;
-refreshPreview();
-initBlockly();
-renderProjects();
-
-document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.addEventListener('click', () => navigateTo(btn.dataset.nav));
+  document.getElementById('htmlCode').value = output;
+  navigateTo('editor');
+  refreshPreview();
 });
 
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(console.error));
+// Projects
+function renderProjects(){
+  const list = document.getElementById('projectList');
+  if(!list) return;
+  const all = JSON.parse(localStorage.getItem('mjh_projects') || '{}');
+  const names = Object.keys(all);
+  if(names.length === 0){
+    list.innerHTML = '<p>কোনো saved project নেই।</p>';
+    return;
+  }
+  list.innerHTML = names.map(name => {
+    const p = all[name];
+    const icon = p.type === 'html' ? 'fa-file-code' : 'fa-puzzle-piece';
+    return `
+      <div class="project-item">
+        <div>
+          <i class="fas ${icon}"></i> ${name}
+          <div class="tiny">${p.type === 'html' ? 'HTML Project' : 'Blockly Project'}</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn primary" onclick="loadProject('${name}')">Load</button>
+          <button class="delete-btn" onclick="deleteProject('${name}')">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
+window.loadProject = function(name){
+  const all = JSON.parse(localStorage.getItem('mjh_projects') || '{}');
+  const p = all[name];
+  if(!p) return;
+  if(p.type === 'html'){
+    document.getElementById('htmlCode').value = p.content;
+    navigateTo('editor');
+    refreshPreview();
+  } else if(p.type === 'blockly'){
+    if(!blocklyWorkspace) initBlockly();
+    try {
+      Blockly.serialization.workspaces.load(JSON.parse(p.content), blocklyWorkspace);
+      navigateTo('blockly');
+    } catch(e){
+      alert('Blockly project load করতে সমস্যা হয়েছে।');
+    }
+  }
+};
+
+window.deleteProject = function(name){
+  if(!confirm(name + ' project delete করতে চান?')) return;
+  const all = JSON.parse(localStorage.getItem('mjh_projects') || '{}');
+  delete all[name];
+  localStorage.setItem('mjh_projects', JSON.stringify(all));
+  renderProjects();
+  renderRecentProjects();
+};
+
+function renderRecentProjects(){
+  const container = document.getElementById('recentProjectsPreview');
+  if(!container) return;
+  const all = JSON.parse(localStorage.getItem('mjh_projects') || '{}');
+  const names = Object.keys(all).slice(0, 3);
+  if(names.length === 0){
+    container.innerHTML = '<p class="tiny">আসলে কোনো recent project নেই।</p>';
+    return;
+  }
+  container.innerHTML = names.map(name => `
+    <div class="project-item" style="padding:8px;margin:8px 0;">
+      <div class="tiny">${name}</div>
+      <button class="btn primary" style="padding:6px 12px;font-size:.9rem;" onclick="loadProject('${name}')">Load</button>
+    </div>
+  `).join('');
+}
+renderRecentProjects();
+
+// Search
+const appHelp = {
+  'html editor': 'HTML Editor-এ আপনি HTML, CSS, JavaScript লিখে live preview দেখতে পারেন। Run Preview চাপলে কোড রান হবে।',
+  'editor': 'HTML Editor-এ আপনি HTML, CSS, JavaScript লিখে live preview দেখতে পারেন।',
+  'blockly': 'Blockly-তে blocks দিয়ে visual programming করুন। Blocks button চাপলে shelf খুলবে।',
+  'video': 'Video Studio-তে ভিডিও upload, preview, download করা যাবে।',
+  'drag builder': 'Drag Builder-এ element drag করে canvas-এ drop করুন, তারপর Generate HTML চাপুন।',
+  'projects': 'Projects-এ আপনার saved HTML এবং Blockly project দেখা, load, delete, export করা যাবে।',
+  'guide': 'App Guide-এ সব feature এর বিস্তারিত সাহায্য আছে।',
+  'search': 'Search-এ app এর feature বা সাহায্য লিখে search করলে exact/partial match দেখাবে।',
+  'dark mode': 'Dark mode-এর জন্য Moon icon চাপুন।',
+  'translate': 'Translate button চাপলে language list খুলবে।',
+  'pwa': 'PWA-র জন্য manifest.json এবং service worker লাগবে।',
+  'apk': 'PWA Builder বা Capacitor দিয়ে web app থেকে APK বানানো যায়।',
+  'facebook': 'Facebook-এ ভিডিও share করতে Facebook button চাপুন।',
+  'youtube': 'YouTube-এ ভিডিও share করতে YouTube button চাপুন।',
+  'tiktok': 'TikTok-এ ভিডিও share করতে TikTok button চাপুন।',
+  'instagram': 'Instagram-এ ভিডিও share করতে Instagram button চাপুন।',
+  'social media': 'Social media buttons দিয়ে Facebook, YouTube, TikTok, Instagram-এ share করা যাবে।',
+  'download video': 'Video download করতে Download button চাপুন বা URL paste করুন।',
+  'share video': 'Video share করতে Share button চাপুন।',
+  'save project': 'Project save করতে Save Project button চাপুন।',
+  'load project': 'Project load করতে Load button চাপুন।',
+  'delete project': 'Project delete করতে Delete button চাপুন।',
+  'export': 'Export All Projects চাপলে backup JSON file download হবে।'
+};
+
+document.getElementById('doSearchBtn').addEventListener('click', () => {
+  const q = document.getElementById('appSearchInput').value.trim().toLowerCase();
+  const resultBox = document.getElementById('searchResult');
+  if(!q){
+    resultBox.textContent = 'কিছু লিখুন।';
+    return;
+  }
+  let found = false;
+  let out = '';
+  for(const [key, text] of Object.entries(appHelp)){
+    if(key.includes(q) || q.includes(key)){
+      out += `<strong>${key}</strong><br>${text}<br><br>`;
+      found = true;
+    }
+  }
+  if(!found){
+    const no = translations[currentLanguage]?.searchNotFound || translations.en.searchNotFound;
+    out = no;
+  }
+  resultBox.innerHTML = out;
+});
+
+// Export
+document.getElementById('exportBackupBtn').addEventListener('click', () => {
+  const data = localStorage.getItem('mjh_projects') || '{}';
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'mjh_projects_backup.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Splash
 setTimeout(() => {
   document.getElementById('splash').style.opacity = '0';
   setTimeout(() => {
-    document.getElementById('splash').style.display = 'none';
+    document.getElementById('splash').classList.add('hidden');
     document.getElementById('mainApp').style.display = 'flex';
   }, 800);
-}, 2500);
+}, 2000);
+
+// Search btn
+document.getElementById('searchBtn').addEventListener('click', () => {
+  navigateTo('searchpage');
+});
+
+// Share btn
+document.getElementById('shareBtn').addEventListener('click', () => {
+  if(navigator.share){
+    navigator.share({
+      title: 'MJH Studio',
+      text: 'Check out MJH Studio - Creative Suite with HTML Editor, Blockly, Video Studio, and Drag Builder',
+      url: window.location.href
+    }).catch(console.error);
+  } else {
+    alert('Web Share not supported। URL: ' + window.location.href);
+  }
+});
 </script>
 </body>
 </html>
