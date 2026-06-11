@@ -102,7 +102,7 @@
     .search-result{margin-top:12px;padding:14px;border-radius:16px;background:var(--soft);border:1px solid var(--border);white-space:pre-wrap}
     .blockly-wrap{border-radius:20px;overflow:hidden;border:1px solid var(--border)}
     .project-item{margin:12px 0;padding:12px;background:var(--soft);border-radius:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-    .lang-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .lang-grid{max-height:350px; overflow-y:auto; padding-right:5px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px}
     @media (max-width:600px){.lang-grid{grid-template-columns:1fr}}
     .guide-note{font-size:.96rem;color:var(--text-sec)}
     .tiny{font-size:.9rem;color:var(--text-sec)}
