@@ -1,51 +1,5 @@
-const CACHE_NAME = 'mjh-studio-v3'; // v2 থেকে v3 করেছি
-const OFFLINE_URL = './offline.html';
-
-const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './offline.html',
-  './sw.js',
-  './icons/icon-192x192.png',
-  './icons/icon-512x512.png'
-];
-
-self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.map(key => key !== CACHE_NAME ? caches.delete(key) : null))
-    )
-  );
-  self.clients.claim();
-});
-
-self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
-
-  event.respondWith((async () => {
-    const cached = await caches.match(event.request);
-    if (cached) return cached;
-
-    try {
-      const response = await fetch(event.request);
-      if (response && response.status === 200 && response.type === 'basic') {
-        const cache = await caches.open(CACHE_NAME);
-        cache.put(event.request, response.clone());
-      }
-      return response;
-    } catch (err) {
-      if (event.request.mode === 'navigate') {
-        const offline = await caches.match(OFFLINE_URL);
-        if (offline) return offline;
-      }
-      const index = await caches.match('./index.html');
-      return index || Response.error();
-    }
-  })());
-});
+const CACHE_NAME = 'mjh-studio-v1';
+const urlsToCache = ['/', '/index.html', '/manifest.json', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css', 'https://cdnjs.cloudflare.com/ajax/libs/blockly/12.3.1/blockly.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/blockly/12.3.1/blocks.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/blockly/12.3.1/javascript.min.js'];
+self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))); self.skipWaiting(); });
+self.addEventListener('fetch', event => { event.respondWith(caches.match(event.request).then(response => response || fetch(event.request).then(fetchResponse => { return caches.open(CACHE_NAME).then(cache => { cache.put(event.request, fetchResponse.clone()); return fetchResponse; }); })).catch(() => caches.match('/index.html'))); });
+self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))); self.clients.claim(); });
