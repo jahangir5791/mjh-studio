@@ -3,6 +3,7 @@
   "short_name": "MJH Studio",
   "description": "Creative Suite with HTML Editor, Blockly, Video Studio, Drag Builder",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "theme_color": "#1e6f5c",
   "background_color": "#0f172a",
